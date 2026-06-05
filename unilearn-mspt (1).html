@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLearn — MSPT</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0F1923;--ink2:#1C2B3A;--blue:#1251D3;--blueh:#0D3FA8;--gold:#C9973A;--goldl:#E8B95A;--cream:#F5F0E8;--creamd:#EDE6D8;--white:#fff;--txt:#0F1923;--muted:#7A7060;--bord:rgba(15,25,35,0.1);--green:#059669;--red:#E74C3C;--sw:248px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--txt);min-height:100vh;}
+.view{display:none;min-height:100vh;}
+.view.active{display:block;}
+
+/* LOGIN */
+#vl{display:none;}
+#vl.active{display:flex;min-height:100vh;}
+.ll{width:50%;background:var(--ink);display:flex;flex-direction:column;padding:44px 48px;position:relative;overflow:hidden;}
+.ll::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 80%,rgba(18,81,211,.18),transparent 50%),radial-gradient(circle at 80% 20%,rgba(201,151,58,.12),transparent 45%);}
+.llg{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.8) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.8) 1px,transparent 1px);background-size:44px 44px;}
+.ll::after{content:'';position:absolute;top:-80px;right:-2px;width:3px;height:calc(100% + 160px);background:linear-gradient(to bottom,transparent,var(--gold) 30%,var(--gold) 70%,transparent);opacity:.55;}
+.lz{position:relative;z-index:2;}
+.brand{display:flex;align-items:center;gap:10px;}
+.bico{width:38px;height:38px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.bnm{font-family:'Instrument Serif',serif;font-size:1.6rem;color:white;}
+.bnm em{color:var(--goldl);font-style:italic;}
+.ltag{font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);margin-top:5px;}
+.lmid{flex:1;display:flex;flex-direction:column;justify-content:center;}
+.lhl{font-family:'Instrument Serif',serif;font-size:2.5rem;line-height:1.15;color:white;margin-bottom:14px;}
+.lhl em{color:var(--goldl);font-style:italic;}
+.ldesc{font-size:.83rem;color:rgba(255,255,255,.38);line-height:1.7;max-width:340px;}
+.mchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:22px;}
+.mchip{font-size:.63rem;font-weight:600;padding:4px 10px;border-radius:7px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.09);}
+.lstats{display:flex;gap:26px;margin-top:28px;}
+.lsv{font-family:'Instrument Serif',serif;font-size:1.5rem;color:white;}
+.lsl{font-size:.58rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.18);}
+.lr{flex:1;display:flex;align-items:center;justify-content:center;padding:44px;}
+.lcard{width:100%;max-width:390px;}
+.lctit{font-family:'Instrument Serif',serif;font-size:1.75rem;color:var(--txt);margin-bottom:5px;}
+.lcsub{font-size:.82rem;color:var(--muted);margin-bottom:26px;line-height:1.6;}
+.fl{display:block;font-size:.67rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt);margin-bottom:6px;}
+.iw{position:relative;}
+.ip{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:.7rem;font-weight:700;color:var(--muted);pointer-events:none;}
+.finp{width:100%;background:var(--creamd);border:1.5px solid transparent;border-radius:11px;padding:13px 13px 13px 50px;font-family:'Outfit',sans-serif;font-size:.93rem;color:var(--txt);outline:none;transition:border-color .2s,background .2s;letter-spacing:1px;font-weight:600;}
+.finp:focus{border-color:var(--blue);background:var(--white);}
+.finp.err{border-color:var(--red);}
+.errt{display:none;font-size:.71rem;color:var(--red);margin-top:6px;font-weight:500;}
+.errt.on{display:block;}
+.hint{background:rgba(18,81,211,.05);border:1px solid rgba(18,81,211,.11);border-radius:9px;padding:11px 14px;font-size:.72rem;color:var(--muted);line-height:1.6;margin:15px 0 20px;}
+.hint strong{color:var(--blue);}
+.btnlg{width:100%;padding:14px;background:var(--ink);color:white;border:none;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.87rem;font-weight:700;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btnlg:hover{background:var(--ink2);}
+.lcft{margin-top:20px;text-align:center;font-size:.68rem;color:var(--muted);}
+
+/* APP SHELL */
+.app{display:flex;min-height:100vh;}
+.sb{width:var(--sw);background:var(--ink);min-height:100vh;position:fixed;top:0;left:0;z-index:100;display:flex;flex-direction:column;}
+.sb::after{content:'';position:absolute;top:0;right:0;width:1px;height:100%;background:linear-gradient(to bottom,transparent,var(--gold) 25%,var(--gold) 75%,transparent);opacity:.2;}
+.sbh{padding:20px 16px 15px;border-bottom:1px solid rgba(255,255,255,.06);}
+.sbn{flex:1;padding:9px 7px;overflow-y:auto;}
+.nlbl{font-size:.54rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.17);padding:0 9px;margin:11px 0 3px;}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.4);font-size:.78rem;font-weight:500;transition:background .15s,color .15s;user-select:none;}
+.ni:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.8);}
+.ni.on{background:rgba(18,81,211,.28);color:white;font-weight:600;}
+.nic{font-size:.87rem;width:17px;text-align:center;}
+.nbadge{margin-left:auto;font-size:.57rem;font-weight:700;padding:2px 6px;border-radius:100px;}
+.nb-b{background:rgba(18,81,211,.3);color:#85C1E9;}
+.nb-r{background:rgba(231,76,60,.25);color:#F1948A;}
+.nb-g{background:rgba(201,151,58,.22);color:var(--goldl);}
+.sbf{padding:9px 7px;border-top:1px solid rgba(255,255,255,.06);}
+.uid{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;background:rgba(255,255,255,.04);margin-bottom:6px;}
+.uav{width:31px;height:31px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--ink);}
+.av-s{background:linear-gradient(135deg,#3B7BF5,#85C1E9);}
+.av-a{background:linear-gradient(135deg,var(--gold),var(--goldl));}
+.unm{font-size:.73rem;font-weight:600;color:white;}
+.url{font-size:.58rem;color:rgba(255,255,255,.27);margin-top:1px;}
+.btnout{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:7px;font-family:'Outfit',sans-serif;font-size:.71rem;font-weight:500;color:rgba(255,255,255,.27);background:none;border:none;cursor:pointer;width:100%;transition:color .2s,background .2s;}
+.btnout:hover{color:#F1948A;background:rgba(192,57,43,.12);}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;}
+.topbar{background:var(--white);border-bottom:1px solid var(--bord);height:57px;padding:0 24px;display:flex;align-items:center;gap:13px;position:sticky;top:0;z-index:50;}
+.tbt{font-family:'Instrument Serif',serif;font-size:1.12rem;color:var(--txt);flex:1;}
+.sw{position:relative;}
+.si{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.76rem;color:var(--muted);pointer-events:none;}
+.srch{background:var(--cream);border:1px solid var(--bord);border-radius:8px;padding:7px 12px 7px 29px;font-family:'Outfit',sans-serif;font-size:.77rem;color:var(--txt);width:195px;outline:none;transition:border-color .2s;}
+.srch:focus{border-color:var(--blue);}
+.tbbtn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--blue);color:white;border-radius:8px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;transition:background .2s;}
+.tbbtn:hover{background:var(--blueh);}
+.tbgh{display:flex;align-items:center;gap:6px;padding:7px 12px;background:var(--cream);color:var(--txt);border-radius:8px;border:1px solid var(--bord);cursor:pointer;font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;transition:background .2s;}
+.tbgh:hover{background:var(--creamd);}
+.pg{display:none;padding:24px;animation:fu .28s ease both;}
+.pg.on{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sc{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:scale(1);}}
+
+/* KPI */
+.krow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
+.kpi{background:var(--white);border:1px solid var(--bord);border-radius:12px;padding:15px 17px;position:relative;overflow:hidden;}
+.kpi::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 12px 12px;}
+.kb::after{background:linear-gradient(90deg,var(--blue),#3B7BF5);}
+.kg::after{background:linear-gradient(90deg,var(--gold),var(--goldl));}
+.kgr::after{background:linear-gradient(90deg,#10B981,#34D399);}
+.kr::after{background:linear-gradient(90deg,var(--red),#F1948A);}
+.kpt{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+.kv{font-family:'Instrument Serif',serif;font-size:1.85rem;color:var(--txt);line-height:1;}
+.kl{font-size:.68rem;color:var(--muted);font-weight:500;margin-top:3px;}
+.tr{font-size:.61rem;font-weight:700;padding:2px 7px;border-radius:100px;background:rgba(16,185,129,.12);color:var(--green);}
+
+/* TABLE */
+.tw{background:var(--white);border:1px solid var(--bord);border-radius:12px;overflow:hidden;}
+.tt{padding:12px 16px;border-bottom:1px solid var(--bord);display:flex;align-items:center;gap:8px;}
+.chips{display:flex;gap:5px;flex:1;}
+.chip{padding:4px 11px;border-radius:7px;font-size:.69rem;font-weight:600;cursor:pointer;border:1px solid var(--bord);background:none;color:var(--muted);font-family:'Outfit',sans-serif;transition:background .12s,color .12s;}
+.chip.on{background:var(--ink);color:white;border-color:var(--ink);}
+.chip:not(.on):hover{background:var(--cream);}
+table{width:100%;border-collapse:collapse;}
+thead{background:rgba(15,25,35,.03);}
+th{padding:9px 14px;font-size:.63rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);text-align:left;border-bottom:1px solid var(--bord);}
+td{padding:11px 14px;font-size:.77rem;border-bottom:1px solid rgba(15,25,35,.05);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(15,25,35,.015);}
+.fc{display:flex;align-items:center;gap:9px;}
+.fico{width:31px;height:31px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0;}
+.fp{background:rgba(192,57,43,.1);}
+.fv{background:rgba(18,81,211,.1);}
+.fd{background:rgba(16,185,129,.1);}
+.fn{font-weight:600;color:var(--txt);font-size:.79rem;}
+.fs{font-size:.63rem;color:var(--muted);margin-top:1px;}
+.sb2{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:100px;font-size:.61rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
+.sp{background:rgba(16,185,129,.12);color:var(--green);}
+.sd{background:rgba(243,156,18,.12);color:#B45309;}
+.sa{background:rgba(15,25,35,.07);color:var(--muted);}
+.abt{display:flex;gap:5px;}
+.ab{padding:4px 9px;border-radius:6px;font-size:.67rem;font-weight:600;cursor:pointer;border:1px solid var(--bord);font-family:'Outfit',sans-serif;background:none;color:var(--muted);transition:background .12s,color .12s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;}
+.ab:hover{background:var(--creamd);color:var(--txt);}
+.ab.pub{background:rgba(16,185,129,.1);color:var(--green);border-color:rgba(16,185,129,.2);}
+.ab.pub:hover{background:rgba(16,185,129,.2);}
+.ab.del:hover{background:rgba(231,76,60,.1);color:var(--red);border-color:rgba(231,76,60,.2);}
+
+/* FORM */
+.uf{background:var(--white);border:1px solid var(--bord);border-radius:12px;padding:22px;}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px;}
+.fg{margin-bottom:13px;}
+.flbl{display:block;font-size:.66rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--txt);margin-bottom:5px;}
+.fin,.fsel,.fta{width:100%;background:var(--cream);border:1px solid var(--bord);border-radius:9px;padding:9px 12px;font-family:'Outfit',sans-serif;font-size:.8rem;color:var(--txt);outline:none;transition:border-color .2s;}
+.fin:focus,.fsel:focus,.fta:focus{border-color:var(--blue);background:var(--white);}
+.fta{resize:vertical;min-height:72px;}
+.fsel{cursor:pointer;}
+.fact{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+.btnp{padding:10px 20px;background:var(--ink);color:white;border:none;border-radius:9px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;transition:background .2s;display:flex;align-items:center;gap:7px;}
+.btnp:hover{background:var(--ink2);}
+.btns{padding:10px 17px;background:none;color:var(--muted);border:1px solid var(--bord);border-radius:9px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;transition:background .2s;}
+.btns:hover{background:var(--creamd);}
+
+/* STUDENT WELCOME */
+.wb{background:var(--ink);border-radius:15px;padding:21px 25px;margin-bottom:18px;position:relative;overflow:hidden;}
+.wb::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 90% 50%,rgba(201,151,58,.12),transparent 60%),radial-gradient(circle at 10% 50%,rgba(18,81,211,.15),transparent 60%);}
+.wb::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:30px 30px;}
+.wbi{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;}
+.wbg{font-size:.66rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.27);margin-bottom:5px;}
+.wbn{font-family:'Instrument Serif',serif;font-size:1.65rem;color:white;margin-bottom:3px;}
+.wbm{font-size:.76rem;color:rgba(255,255,255,.4);}
+.wbbd{background:rgba(201,151,58,.18);border:1px solid rgba(201,151,58,.27);border-radius:9px;padding:7px 14px;}
+.wbbt{font-size:.73rem;color:var(--goldl);font-weight:600;}
+
+/* ANNONCE BAR */
+.annb{background:rgba(18,81,211,.055);border:1px solid rgba(18,81,211,.13);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;margin-bottom:17px;cursor:pointer;transition:background .2s;}
+.annb:hover{background:rgba(18,81,211,.1);}
+.anndt{width:7px;height:7px;background:var(--blue);border-radius:50%;flex-shrink:0;animation:pl 2s infinite;}
+@keyframes pl{0%,100%{opacity:1;}50%{opacity:.25};}
+.annbtxt{flex:1;font-size:.77rem;color:var(--ink);}
+.annd{font-size:.63rem;color:var(--muted);}
+
+/* MODULE CARDS */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:12px;margin-bottom:20px;}
+.mc{background:var(--white);border:1px solid var(--bord);border-radius:12px;padding:16px 18px;cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .15s;position:relative;overflow:hidden;}
+.mc:hover{border-color:rgba(18,81,211,.2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(15,25,35,.07);}
+.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--mca,var(--blue));}
+.mct{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px;}
+.mcico{width:34px;height:34px;border-radius:8px;background:var(--mcbg,rgba(18,81,211,.08));display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.mcbd{display:flex;gap:4px;}
+.bnew{background:rgba(231,76,60,.1);color:#C0392B;font-size:.57rem;font-weight:700;padding:2px 7px;border-radius:5px;text-transform:uppercase;}
+.bupd{background:rgba(243,156,18,.1);color:#B45309;font-size:.57rem;font-weight:700;padding:2px 7px;border-radius:5px;text-transform:uppercase;}
+.mctit{font-size:.86rem;font-weight:700;color:var(--txt);margin-bottom:3px;}
+.mcsub{font-size:.68rem;color:var(--muted);}
+.mcft{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--bord);}
+.mctags{display:flex;gap:5px;}
+.mctag{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:5px;background:var(--creamd);color:var(--muted);}
+
+/* COURS LIST */
+.cli{background:var(--white);border:1px solid var(--bord);border-radius:11px;padding:14px 17px;margin-bottom:9px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:border-color .2s,box-shadow .15s;}
+.cli:hover{border-color:rgba(18,81,211,.2);box-shadow:0 4px 14px rgba(15,25,35,.06);}
+.clii{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.clib{flex:1;}
+.clit{font-size:.84rem;font-weight:700;color:var(--txt);margin-bottom:2px;}
+.clim{font-size:.68rem;color:var(--muted);}
+.clibdg{font-size:.61rem;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(18,81,211,.08);color:var(--blue);}
+
+/* READER */
+.rdbk{display:flex;align-items:center;gap:7px;font-size:.77rem;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:17px;background:none;border:none;padding:0;}
+.rdbk:hover{color:var(--txt);}
+.rdhdr{background:var(--white);border:1px solid var(--bord);border-radius:12px;padding:17px 21px;margin-bottom:13px;display:flex;align-items:center;gap:13px;}
+.rdico{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
+.rdtit{font-family:'Instrument Serif',serif;font-size:1.2rem;color:var(--txt);}
+.rdmet{font-size:.7rem;color:var(--muted);margin-top:2px;}
+.rdacts{margin-left:auto;display:flex;gap:7px;}
+.rdbtn{padding:7px 14px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.74rem;font-weight:600;cursor:pointer;transition:background .2s;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
+.rdo{background:var(--blue);color:white;border:none;}
+.rdo:hover{background:var(--blueh);}
+.rddl{background:var(--cream);color:var(--txt);border:1px solid var(--bord);}
+.rddl:hover{background:var(--creamd);}
+.rdph{background:var(--white);border:1px solid var(--bord);border-radius:12px;overflow:hidden;min-height:480px;display:flex;align-items:center;justify-content:center;}
+.rdphb{text-align:center;padding:56px 28px;}
+.rdphic{font-size:2.6rem;margin-bottom:11px;}
+.rdpht{font-family:'Instrument Serif',serif;font-size:1.15rem;color:var(--txt);margin-bottom:5px;}
+.rdphs{font-size:.76rem;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+.rdphl{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:var(--blue);color:white;border-radius:9px;font-size:.8rem;font-weight:600;text-decoration:none;transition:background .2s;}
+.rdphl:hover{background:var(--blueh);}
+
+/* ANNONCES */
+.ani{background:var(--white);border:1px solid var(--bord);border-radius:11px;padding:15px 19px;display:flex;align-items:flex-start;gap:13px;margin-bottom:9px;}
+.aniic{font-size:1.25rem;flex-shrink:0;margin-top:1px;}
+.anib{flex:1;}
+.anit{font-size:.85rem;font-weight:700;color:var(--txt);margin-bottom:3px;}
+.anim{font-size:.74rem;color:var(--muted);line-height:1.55;margin-bottom:7px;}
+.anif{display:flex;gap:8px;align-items:center;}
+.anic{font-size:.61rem;font-weight:700;padding:3px 8px;border-radius:5px;}
+.acb{background:rgba(18,81,211,.08);color:var(--blue);}
+.acr{background:rgba(231,76,60,.08);color:var(--red);}
+.anid{font-size:.63rem;color:var(--muted);}
+
+/* PROFIL */
+.pcard{background:var(--white);border:1px solid var(--bord);border-radius:12px;padding:19px 21px;margin-bottom:13px;}
+.pcdt{font-family:'Instrument Serif',serif;font-size:.97rem;color:var(--txt);margin-bottom:13px;}
+.pfl{font-size:.63rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.pfv{font-size:.86rem;font-weight:600;color:var(--txt);}
+code.mat{background:var(--cream);padding:3px 9px;border-radius:5px;font-size:.78rem;font-weight:700;}
+
+/* 2 COL */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:17px;}
+.cbx{background:var(--white);border:1px solid var(--bord);border-radius:12px;padding:17px 19px;}
+.cbxt{font-family:'Instrument Serif',serif;font-size:.96rem;color:var(--txt);margin-bottom:13px;}
+.acti{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(15,25,35,.05);}
+.acti:last-child{border-bottom:none;}
+.actd{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.db{background:var(--blue);}
+.dg{background:#10B981;}
+.dgo{background:var(--gold);}
+.dr{background:var(--red);}
+.actt{flex:1;font-size:.77rem;color:var(--txt);}
+.actm{font-size:.63rem;color:var(--muted);white-space:nowrap;}
+.brow{margin-bottom:12px;}
+.brla{display:flex;justify-content:space-between;margin-bottom:3px;font-size:.77rem;}
+.brtr{background:var(--creamd);border-radius:3px;height:5px;overflow:hidden;}
+.brfi{background:var(--blue);height:100%;border-radius:3px;transition:width .8s ease;}
+
+/* MATRICULES */
+.mc2{display:flex;gap:8px;align-items:center;margin-bottom:13px;flex-wrap:wrap;}
+.mcsw{position:relative;flex:1;}
+.mcsi{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:.76rem;color:var(--muted);pointer-events:none;}
+.mcs{flex:1;min-width:170px;background:var(--white);border:1px solid var(--bord);border-radius:8px;padding:7px 12px 7px 28px;font-family:'Outfit',sans-serif;font-size:.77rem;color:var(--txt);outline:none;}
+.mcs:focus{border-color:var(--blue);}
+.amf{display:none;background:var(--white);border:1px solid rgba(18,81,211,.17);border-radius:11px;padding:17px 19px;margin-bottom:13px;animation:fu .22s ease;}
+.amf.on{display:block;}
+
+/* SEC HEADER */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sht{font-family:'Instrument Serif',serif;font-size:1.15rem;color:var(--txt);}
+.shs{font-size:.68rem;color:var(--muted);margin-top:2px;}
+
+/* MODAL */
+.mov{position:fixed;inset:0;background:rgba(15,25,35,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000;}
+.mov.on{display:flex;}
+.modal{background:var(--white);border-radius:15px;padding:26px;width:100%;max-width:390px;animation:sc .2s ease;box-shadow:0 18px 48px rgba(15,25,35,.15);}
+.mw{max-width:500px;}
+.mtit{font-family:'Instrument Serif',serif;font-size:1.25rem;color:var(--txt);margin-bottom:6px;}
+.msub{font-size:.79rem;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.mft{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--ink);color:white;padding:11px 17px;border-radius:10px;font-size:.79rem;font-weight:500;transform:translateY(65px);opacity:0;transition:transform .27s ease,opacity .27s ease;z-index:9999;box-shadow:0 6px 20px rgba(15,25,35,.2);max-width:290px;}
+.toast.on{transform:translateY(0);opacity:1;}
+
+.sh2{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:13px;}
+.empty{text-align:center;padding:44px;color:var(--muted);font-size:.82rem;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ LOGIN ═══════════════ -->
+<div id="vl" class="view active">
+  <div class="ll">
+    <div class="llg"></div>
+    <div class="lz">
+      <div class="brand"><div class="bico">🎓</div><div class="bnm">Uni<em>Learn</em></div></div>
+      <div class="ltag">Filière · Maintenance des Systèmes Pluri-Techniques</div>
+    </div>
+    <div class="lmid lz">
+      <div class="lhl">Vos cours <em>MSPT</em><br>en un seul endroit.</div>
+      <p class="ldesc">Tous vos cours, TD et vidéos organisés par module — accessibles 24h/24 depuis n'importe quel appareil.</p>
+      <div class="mchips">
+        <span class="mchip">⚙️ Analyse Fonctionnelle</span>
+        <span class="mchip">🛢️ Forages &amp; Puits</span>
+        <span class="mchip">💧 Hydraulique</span>
+        <span class="mchip">🔁 Asservissement</span>
+        <span class="mchip">⚡ Génie Électrique</span>
+        <span class="mchip">🛡️ QHS</span>
+      </div>
+      <div class="lstats">
+        <div><div class="lsv" id="ls1">—</div><div class="lsl">Étudiants</div></div>
+        <div><div class="lsv" id="ls2">—</div><div class="lsl">Cours</div></div>
+        <div><div class="lsv">6</div><div class="lsl">Modules</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="lr">
+    <div class="lcard">
+      <div class="lctit">Accéder à mes cours</div>
+      <p class="lcsub">Entrez votre matricule pour accéder à votre espace étudiant.</p>
+      <div style="margin-bottom:16px;">
+        <label class="fl">Numéro de matricule</label>
+        <div class="iw">
+          <span class="ip">N°</span>
+          <input type="text" id="matInp" class="finp" placeholder="ex : 2025MSPT001" oninput="clearE()" onkeydown="if(event.key==='Enter')login()">
+        </div>
+        <div id="errMsg" class="errt">Matricule non reconnu ou compte inactif.</div>
+      </div>
+      <div class="hint">💡 <strong>Démo :</strong> Étudiant → <code>2025MSPT001</code> &nbsp;|&nbsp; Admin → <code>ADMIN</code><br><span style="font-size:.67rem;">Mot de passe admin par défaut : <code>admin123</code></span></div>
+      <button class="btnlg" onclick="login()"><span id="btxt">Accéder à mon espace</span><span>→</span></button>
+      <div class="lcft">UniLearn · MSPT · Accès sécurisé par matricule</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ÉTUDIANT ═══════════════ -->
+<div id="vs" class="view">
+  <div class="app">
+    <nav class="sb">
+      <div class="sbh">
+        <div class="brand"><div class="bico">🎓</div><div class="bnm">Uni<em>Learn</em></div></div>
+        <div style="margin-top:7px;display:inline-flex;align-items:center;gap:5px;background:rgba(18,81,211,.2);border:1px solid rgba(18,81,211,.27);border-radius:5px;padding:3px 8px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#85C1E9;">🎓 Étudiant</div>
+      </div>
+      <div class="sbn">
+        <div class="nlbl">Mon espace</div>
+        <div class="ni on" onclick="snav(this,'ps-home')"><span class="nic">🏠</span>Tableau de bord</div>
+        <div class="ni" onclick="snav(this,'ps-cours')"><span class="nic">📚</span>Mes cours<span class="nbadge nb-b" id="scbdg">0</span></div>
+        <div class="ni" onclick="snav(this,'ps-ann')"><span class="nic">📣</span>Annonces<span class="nbadge nb-r" id="sanbdg">0</span></div>
+        <div class="nlbl">Compte</div>
+        <div class="ni" onclick="snav(this,'ps-profil')"><span class="nic">👤</span>Mon profil</div>
+      </div>
+      <div class="sbf">
+        <div class="uid"><div class="uav av-s" id="sav">ET</div><div><div class="unm" id="snm">—</div><div class="url">MSPT</div></div></div>
+        <button class="btnout" onclick="logout()">⬅ Déconnexion</button>
+      </div>
+    </nav>
+    <div class="main">
+      <div class="topbar"><div class="tbt" id="stbt">Tableau de bord</div><div class="sw"><span class="si">🔍</span><input class="srch" placeholder="Rechercher un cours…" oninput="ssrch(this.value)"></div></div>
+      <!-- HOME -->
+      <div class="pg on" id="ps-home">
+        <div class="wb"><div class="wbi"><div><div class="wbg">Bienvenue</div><div class="wbn" id="wbn">—</div><div class="wbm" id="wbm">—</div></div><div class="wbbd"><div class="wbbt" id="wbbt">MSPT</div></div></div></div>
+        <div class="annb" id="annbtn"><div class="anndt"></div><div class="annbtxt" id="annbtxt">Aucune annonce récente.</div><div class="annd" id="annbd">—</div></div>
+        <div class="sh"><div><div class="sht">Mes modules</div><div class="shs">Cliquez sur un module pour voir les cours disponibles</div></div></div>
+        <div class="mgrid" id="mgrid"></div>
+      </div>
+      <!-- COURS -->
+      <div class="pg" id="ps-cours">
+        <div class="sh2"><div><div class="sht">Tous mes cours</div><div class="shs" id="csub">—</div></div></div>
+        <div id="clist"></div>
+      </div>
+      <!-- READER -->
+      <div class="pg" id="ps-reader">
+        <button class="rdbk" onclick="snav(null,'ps-cours',true)">← Retour aux cours</button>
+        <div class="rdhdr">
+          <div class="rdico" id="rdico">📄</div>
+          <div><div class="rdtit" id="rdtit">—</div><div class="rdmet" id="rdmet">—</div></div>
+          <div class="rdacts">
+            <a id="rdopen" class="rdbtn rdo" href="#" target="_blank">🔗 Ouvrir le fichier</a>
+            <a id="rddl" class="rdbtn rddl" href="#" target="_blank">📥 Télécharger</a>
+          </div>
+        </div>
+        <div class="rdph">
+          <div class="rdphb">
+            <div class="rdphic" id="phic">📄</div>
+            <div class="rdpht" id="phtit">—</div>
+            <div class="rdphs" id="phsub">Le fichier est hébergé sur Google Drive. Cliquez pour l'ouvrir.</div>
+            <a id="phlnk" href="#" target="_blank" class="rdphl">🔗 Ouvrir sur Google Drive</a>
+          </div>
+        </div>
+      </div>
+      <!-- ANNONCES -->
+      <div class="pg" id="ps-ann">
+        <div class="sh"><div><div class="sht">Annonces</div><div class="shs">Communications de l'administration</div></div></div>
+        <div id="sannlist"></div>
+      </div>
+      <!-- PROFIL -->
+      <div class="pg" id="ps-profil">
+        <div class="sh"><div><div class="sht">Mon profil</div></div></div>
+        <div style="max-width:460px;">
+          <div class="pcard">
+            <div class="pcdt">Informations personnelles</div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div><div class="pfl">Nom complet</div><div class="pfv" id="pfnm">—</div></div>
+              <div><div class="pfl">Matricule</div><div><code class="mat" id="pfmt">—</code></div></div>
+              <div><div class="pfl">Filière</div><div class="pfv">Maintenance des Systèmes Pluri-Techniques</div></div>
+              <div><div class="pfl">Niveau</div><div class="pfv" id="pfniv">—</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ADMIN ═══════════════ -->
+<div id="va" class="view">
+  <div class="app">
+    <nav class="sb">
+      <div class="sbh">
+        <div class="brand"><div class="bico">🎓</div><div class="bnm">Uni<em>Learn</em></div></div>
+        <div style="margin-top:7px;display:inline-flex;align-items:center;gap:5px;background:rgba(201,151,58,.18);border:1px solid rgba(201,151,58,.27);border-radius:5px;padding:3px 8px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--goldl);">⚙️ Administrateur</div>
+      </div>
+      <div class="sbn">
+        <div class="nlbl">Vue d'ensemble</div>
+        <div class="ni on" onclick="anav(this,'pa-home')"><span class="nic">📊</span>Tableau de bord</div>
+        <div class="nlbl">Contenu</div>
+        <div class="ni" onclick="anav(this,'pa-cours')"><span class="nic">📚</span>Cours<span class="nbadge nb-g" id="acbdg">0</span></div>
+        <div class="ni" onclick="anav(this,'pa-upload')"><span class="nic">⬆️</span>Ajouter un cours</div>
+        <div class="ni" onclick="anav(this,'pa-ann')"><span class="nic">📣</span>Annonces</div>
+        <div class="nlbl">Gestion</div>
+        <div class="ni" onclick="anav(this,'pa-mat')"><span class="nic">🎓</span>Matricules</div>
+        <div class="ni" onclick="anav(this,'pa-cfg')"><span class="nic">⚙️</span>Configuration</div>
+      </div>
+      <div class="sbf">
+        <div class="uid"><div class="uav av-a">AD</div><div><div class="unm">Administrateur</div><div class="url">Accès total</div></div></div>
+        <button class="btnout" onclick="logout()">⬅ Déconnexion</button>
+      </div>
+    </nav>
+    <div class="main">
+      <div class="topbar"><div class="tbt" id="atbt">Tableau de bord</div><div style="flex:1"></div><button class="tbgh" onclick="toast('🔄 Actualisé')">🔄</button><button class="tbbtn" onclick="anav(document.querySelector('[onclick*=pa-upload]'),\'pa-upload\')">+ Nouveau cours</button></div>
+      <!-- ADM HOME -->
+      <div class="pg on" id="pa-home">
+        <div class="krow">
+          <div class="kpi kb"><div class="kpt"><span>🎓</span><span class="tr">actifs</span></div><div class="kv" id="k1">0</div><div class="kl">Étudiants actifs</div></div>
+          <div class="kpi kg"><div class="kpt"><span>📚</span><span class="tr">publiés</span></div><div class="kv" id="k2">0</div><div class="kl">Cours publiés</div></div>
+          <div class="kpi kgr"><div class="kpt"><span>📦</span></div><div class="kv" id="k3">0</div><div class="kl">Brouillons</div></div>
+          <div class="kpi kr"><div class="kpt"><span>📣</span></div><div class="kv" id="k4">0</div><div class="kl">Annonces actives</div></div>
+        </div>
+        <div class="two">
+          <div class="cbx"><div class="cbxt">Cours par module</div><div id="modstat"></div></div>
+          <div class="cbx"><div class="cbxt">Activité récente</div><div id="actlog"></div></div>
+        </div>
+      </div>
+      <!-- ADM COURS -->
+      <div class="pg" id="pa-cours">
+        <div class="tw">
+          <div class="tt">
+            <div class="chips">
+              <button class="chip on" onclick="afilt(this,'all')">Tous</button>
+              <button class="chip" onclick="afilt(this,'publié')">Publiés</button>
+              <button class="chip" onclick="afilt(this,'brouillon')">Brouillons</button>
+            </div>
+            <input class="srch" placeholder="Rechercher…" oninput="asrch(this.value)" style="width:175px;">
+          </div>
+          <table><thead><tr><th>Cours</th><th>Module</th><th>Niv.</th><th>Type</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="acbody"></tbody></table>
+        </div>
+      </div>
+      <!-- ADM UPLOAD -->
+      <div class="pg" id="pa-upload">
+        <div class="sh"><div><div class="sht">Ajouter un cours</div><div class="shs">Collez le lien Google Drive du fichier</div></div></div>
+        <div class="uf">
+          <div class="fr2">
+            <div class="fg"><label class="flbl">Titre du cours *</label><input type="text" id="uTit" class="fin" placeholder="ex : Cours 1 — Introduction"></div>
+            <div class="fg"><label class="flbl">Professeur</label><input type="text" id="uProf" class="fin" placeholder="Nom du professeur"></div>
+          </div>
+          <div class="fr2">
+            <div class="fg"><label class="flbl">Module *</label><select id="uMod" class="fsel">
+              <option value="">— Choisir —</option>
+              <option>Analyse Fonctionnelle et Structurelle</option>
+              <option>Forages et Puits</option>
+              <option>Hydraulique</option>
+              <option>Asservissement et Régulation</option>
+              <option>Génie Électrique et Automatisme</option>
+              <option>Qualité, Hygiène et Sécurité</option>
+            </select></div>
+            <div class="fg"><label class="flbl">Niveau *</label><select id="uNiv" class="fsel">
+              <option value="">— Choisir —</option>
+              <option value="L1">Licence 1</option>
+              <option value="L2">Licence 2</option>
+              <option value="L3">Licence 3</option>
+              <option value="M1">Master 1</option>
+              <option value="M2">Master 2</option>
+            </select></div>
+          </div>
+          <div class="fr2">
+            <div class="fg"><label class="flbl">Type de fichier</label><select id="uType" class="fsel"><option value="PDF">PDF</option><option value="Vidéo">Vidéo</option><option value="PPTX">Présentation</option><option value="Document">Document</option></select></div>
+            <div class="fg"><label class="flbl">Statut</label><select id="uStat" class="fsel"><option value="brouillon">💾 Brouillon</option><option value="publié">✅ Publier immédiatement</option></select></div>
+          </div>
+          <div class="fg">
+            <label class="flbl">Lien Google Drive *</label>
+            <input type="text" id="uLnk" class="fin" placeholder="https://drive.google.com/file/d/VOTRE_ID/view">
+            <div style="background:rgba(18,81,211,.05);border:1px solid rgba(18,81,211,.11);border-radius:7px;padding:9px 13px;font-size:.7rem;color:var(--muted);line-height:1.6;margin-top:7px;">💡 <strong style="color:var(--blue);">Comment obtenir un lien :</strong> Drive → clic droit sur le fichier → Partager → "Tout le monde avec le lien" → Copier le lien.</div>
+          </div>
+          <div class="fg"><label class="flbl">Description (optionnel)</label><textarea class="fta" id="uDesc" placeholder="Résumé du contenu de ce cours…"></textarea></div>
+          <div class="fact"><button class="btns" onclick="resetU()">Réinitialiser</button><button class="btnp" onclick="submitC()">💾 Enregistrer</button></div>
+        </div>
+      </div>
+      <!-- ADM ANNONCES -->
+      <div class="pg" id="pa-ann">
+        <div class="sh"><div><div class="sht">Annonces</div><div class="shs">Visibles sur le dashboard étudiant</div></div><button class="tbbtn" onclick="openAnn()">+ Nouvelle annonce</button></div>
+        <div id="aannlist"></div>
+      </div>
+      <!-- ADM MATRICULES -->
+      <div class="pg" id="pa-mat">
+        <div class="amf" id="amfm">
+          <div style="font-size:.85rem;font-weight:700;margin-bottom:12px;">Ajouter un matricule</div>
+          <div class="fr2">
+            <div class="fg"><label class="flbl">Matricule *</label><input type="text" id="nmat" class="fin" placeholder="ex : 2025MSPT042"></div>
+            <div class="fg"><label class="flbl">Nom complet *</label><input type="text" id="nnom" class="fin" placeholder="Nom Prénom"></div>
+          </div>
+          <div class="fr2">
+            <div class="fg"><label class="flbl">Niveau</label><select id="nniv" class="fsel"><option value="L1">L1</option><option value="L2">L2</option><option value="L3">L3</option></select></div>
+            <div class="fg"><label class="flbl">Statut</label><select id="nstat" class="fsel"><option value="actif">Actif</option><option value="attente">En attente</option></select></div>
+          </div>
+          <div class="fact"><button class="btns" onclick="document.getElementById('amfm').classList.remove('on')">Annuler</button><button class="btnp" onclick="addMat()">✅ Ajouter</button></div>
+        </div>
+        <div class="mc2">
+          <div class="mcsw"><span class="mcsi">🔍</span><input class="mcs" placeholder="Rechercher par matricule ou nom…" oninput="srchMat(this.value)"></div>
+          <div class="chips" style="flex:none;">
+            <button class="chip on" onclick="filtMat(this,'all')">Tous</button>
+            <button class="chip" onclick="filtMat(this,'actif')">Actifs</button>
+            <button class="chip" onclick="filtMat(this,'attente')">En attente</button>
+          </div>
+          <button class="tbbtn" onclick="document.getElementById('amfm').classList.add('on')">+ Ajouter</button>
+        </div>
+        <div class="tw"><table><thead><tr><th>Matricule</th><th>Nom</th><th>Niveau</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="matbody"></tbody></table></div>
+      </div>
+      <!-- ADM CONFIG -->
+      <div class="pg" id="pa-cfg">
+        <div class="sh"><div><div class="sht">Configuration</div></div></div>
+        <div style="max-width:460px;">
+          <div class="pcard">
+            <div class="pcdt">Changer le mot de passe admin</div>
+            <div class="fg"><label class="flbl">Mot de passe actuel</label><input type="password" id="cpw1" class="fin" placeholder="••••••••"></div>
+            <div class="fg"><label class="flbl">Nouveau mot de passe</label><input type="password" id="cpw2" class="fin" placeholder="••••••••"></div>
+            <div class="fg"><label class="flbl">Confirmer</label><input type="password" id="cpw3" class="fin" placeholder="••••••••"></div>
+            <div class="fact"><button class="btnp" onclick="chgPw()">🔒 Changer</button></div>
+          </div>
+          <div class="pcard">
+            <div class="pcdt">Réinitialiser les données</div>
+            <p style="font-size:.76rem;color:var(--muted);line-height:1.6;margin-bottom:13px;">Efface tous les cours, matricules et annonces et remet les données par défaut. Irréversible.</p>
+            <button class="btnp" style="background:var(--red);" onclick="resetAll()">⚠️ Réinitialiser tout</button>
+          </div>
+          <div class="pcard">
+            <div class="pcdt">À propos</div>
+            <p style="font-size:.76rem;color:var(--muted);line-height:1.7;">Application <strong style="color:var(--txt);">UniLearn MSPT</strong> — 100% HTML statique.<br>Les données sont sauvegardées dans votre navigateur (localStorage).<br>Pour partager l'appli, envoyez simplement ce fichier HTML.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SUPPRIMER -->
+<div class="mov" id="mdel"><div class="modal"><div class="mtit">Supprimer ce cours ?</div><div class="msub">Vous allez supprimer <strong id="deltgt">—</strong>. Cette action est irréversible.</div><div class="mft"><button class="btns" onclick="cm('mdel')">Annuler</button><button class="btnp" style="background:var(--red);" onclick="confDel()">🗑️ Supprimer</button></div></div></div>
+
+<!-- MODAL ANNONCE -->
+<div class="mov" id="mann"><div class="modal mw"><div class="mtit">Nouvelle annonce</div><div class="fg" style="margin-bottom:12px;"><label class="flbl">Titre *</label><input type="text" id="antit" class="fin" placeholder="ex : Report d'examen"></div><div class="fg" style="margin-bottom:12px;"><label class="flbl">Message</label><textarea id="anmsg" class="fta" placeholder="Détails de l'annonce…"></textarea></div><div class="fg"><label class="flbl">Cibler</label><select id="antgt" class="fsel"><option>Tous les étudiants</option><option>L1 uniquement</option><option>L2 uniquement</option><option>L3 uniquement</option></select></div><div class="mft"><button class="btns" onclick="cm('mann')">Annuler</button><button class="btnp" onclick="pubAnn()">📣 Publier</button></div></div></div>
+
+<!-- MODAL MOT DE PASSE ADMIN -->
+<div class="mov" id="mpw"><div class="modal"><div class="mtit">Accès Administrateur</div><div class="msub">Entrez le mot de passe pour accéder au panel d'administration.</div><div class="fg"><label class="flbl">Mot de passe</label><input type="password" id="pwinp" class="fin" placeholder="••••••••" onkeydown="if(event.key==='Enter')chkPw()"></div><div id="pwerr" class="errt">Mot de passe incorrect.</div><div class="mft"><button class="btns" onclick="cm('mpw');clearE()">Annuler</button><button class="btnp" onclick="chkPw()">🔓 Entrer</button></div></div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════
+// DONNÉES PAR DÉFAUT
+// ════════════════════════════════
+const MODS = [
+  {id:'AFS',tit:'Analyse Fonctionnelle et Structurelle',ico:'⚙️',acc:'#1251D3',bg:'rgba(18,81,211,0.08)',bdg:'new'},
+  {id:'FP', tit:'Forages et Puits',                    ico:'🛢️',acc:'#C9973A',bg:'rgba(201,151,58,0.08)',bdg:null},
+  {id:'HYD',tit:'Hydraulique',                         ico:'💧',acc:'#10B981',bg:'rgba(16,185,129,0.08)',bdg:'upd'},
+  {id:'ASR',tit:'Asservissement et Régulation',        ico:'🔁',acc:'#8B5CF6',bg:'rgba(139,92,246,0.08)', bdg:null},
+  {id:'GEA',tit:'Génie Électrique et Automatisme',     ico:'⚡',acc:'#F39C12',bg:'rgba(243,156,18,0.08)', bdg:'new'},
+  {id:'QHS',tit:'Qualité, Hygiène et Sécurité',        ico:'🛡️',acc:'#E74C3C',bg:'rgba(231,76,60,0.08)',  bdg:null},
+];
+
+const COURS0 = [
+  {id:1,tit:'Cours 1 — Introduction à l\'analyse fonctionnelle',mod:'Analyse Fonctionnelle et Structurelle',niv:'L1',type:'PDF',stat:'publié',lien:'https://drive.google.com',desc:'Bases de l\'analyse fonctionnelle.',date:'01 Juin 2025'},
+  {id:2,tit:'TD1 — Décomposition fonctionnelle',              mod:'Analyse Fonctionnelle et Structurelle',niv:'L1',type:'PDF',stat:'publié',lien:'https://drive.google.com',desc:'',date:'03 Juin 2025'},
+  {id:3,tit:'Cours 1 — Géologie et formation des puits',      mod:'Forages et Puits',niv:'L2',type:'PDF',stat:'publié',lien:'https://drive.google.com',desc:'',date:'28 Mai 2025'},
+  {id:4,tit:'Cours 1 — Principes de l\'hydraulique',          mod:'Hydraulique',niv:'L1',type:'PDF',stat:'publié',lien:'https://drive.google.com',desc:'',date:'25 Mai 2025'},
+  {id:5,tit:'Cours 2 — Pompes et circuits hydrauliques',      mod:'Hydraulique',niv:'L2',type:'Vidéo',stat:'publié',lien:'https://drive.google.com',desc:'',date:'29 Mai 2025'},
+  {id:6,tit:'Cours 1 — Systèmes asservis',                   mod:'Asservissement et Régulation',niv:'L2',type:'PDF',stat:'brouillon',lien:'',desc:'',date:'02 Juin 2025'},
+  {id:7,tit:'Cours 1 — Électrotechnique de base',             mod:'Génie Électrique et Automatisme',niv:'L1',type:'PDF',stat:'publié',lien:'https://drive.google.com',desc:'',date:'20 Mai 2025'},
+  {id:8,tit:'Cours 1 — Démarche QHS en industrie',            mod:'Qualité, Hygiène et Sécurité',niv:'L1',type:'PDF',stat:'publié',lien:'https://drive.google.com',desc:'',date:'15 Mai 2025'},
+];
+const ETU0 = [
+  {id:'2025MSPT001',nom:'Kouassi Brice Marius',niv:'L1',stat:'actif'},
+  {id:'2025MSPT002',nom:'Mbemba Clarisse N.',  niv:'L2',stat:'actif'},
+  {id:'2025MSPT003',nom:'Bitsindou Franck',    niv:'L1',stat:'actif'},
+  {id:'2025MSPT004',nom:'Nzita Gloria',        niv:'L3',stat:'attente'},
+];
+const ANN0 = [{id:1,tit:'Bienvenue sur UniLearn MSPT !',msg:'La plateforme est en ligne. Accédez à vos cours depuis votre tableau de bord.',cib:'Tous les étudiants',date:'Aujourd\'hui',urg:false}];
+const ACT0 = [
+  {t:'Cours publié : Cours 1 Analyse Fonctionnelle',m:'Il y a 2h',d:'dg'},
+  {t:'Matricule ajouté : 2025MSPT003',m:'Hier',d:'db'},
+  {t:'Annonce publiée : Bienvenue UniLearn',m:'Il y a 2 jours',d:'dgo'},
+];
+
+// ════════════════════════════════
+// STORAGE
+// ════════════════════════════════
+function ld(k,def){try{const v=localStorage.getItem('ul_'+k);return v?JSON.parse(v):def;}catch{return def;}}
+function sv(k,v){try{localStorage.setItem('ul_'+k,JSON.stringify(v));}catch{}}
+let DB={cours:ld('cours',COURS0),etu:ld('etu',ETU0),ann:ld('ann',ANN0),act:ld('act',ACT0),pw:ld('pw','admin123')};
+function sva(){sv('cours',DB.cours);sv('etu',DB.etu);sv('ann',DB.ann);sv('act',DB.act);sv('pw',DB.pw);}
+
+// ════════════════════════════════
+// AUTH
+// ════════════════════════════════
+let CU=null;
+function login(){
+  const v=document.getElementById('matInp').value.trim().toUpperCase();
+  if(!v){showE('Entrez votre matricule.');return;}
+  document.getElementById('btxt').textContent='Vérification…';
+  setTimeout(()=>{
+    document.getElementById('btxt').textContent='Accéder à mon espace';
+    if(v==='ADMIN'){document.getElementById('pwinp').value='';document.getElementById('pwerr').classList.remove('on');document.getElementById('mpw').classList.add('on');return;}
+    const e=DB.etu.find(x=>x.id===v&&x.stat==='actif');
+    if(!e){showE('Matricule non reconnu ou compte inactif.');document.getElementById('matInp').classList.add('err');return;}
+    CU={...e,role:'student'};showStu();
+  },500);
+}
+function chkPw(){
+  if(document.getElementById('pwinp').value===DB.pw){cm('mpw');CU={role:'admin'};showAdm();}
+  else document.getElementById('pwerr').classList.add('on');
+}
+function logout(){CU=null;sw('vl');document.getElementById('matInp').value='';clearE();toast('👋 Déconnexion réussie');}
+function showE(m){const e=document.getElementById('errMsg');e.textContent=m;e.classList.add('on');}
+function clearE(){['errMsg','pwerr'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('on');});const fi=document.getElementById('matInp');if(fi)fi.classList.remove('err');}
+
+// ════════════════════════════════
+// VUES
+// ════════════════════════════════
+function sw(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function snav(el,pid,skip=false){
+  if(el&&!skip){document.querySelectorAll('#vs .ni').forEach(i=>i.classList.remove('on'));el.classList.add('on');}
+  document.querySelectorAll('#vs .pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById(pid).classList.add('on');
+  const ts={'ps-home':'Tableau de bord','ps-cours':'Mes cours','ps-reader':'Lecteur','ps-ann':'Annonces','ps-profil':'Mon profil'};
+  document.getElementById('stbt').textContent=ts[pid]||'';
+}
+function anav(el,pid){
+  document.querySelectorAll('#va .ni').forEach(i=>i.classList.remove('on'));if(el)el.classList.add('on');
+  document.querySelectorAll('#va .pg').forEach(p=>p.classList.remove('on'));document.getElementById(pid).classList.add('on');
+  const ts={'pa-home':'Tableau de bord','pa-cours':'Gestion des cours','pa-upload':'Ajouter un cours','pa-ann':'Annonces','pa-mat':'Matricules','pa-cfg':'Configuration'};
+  document.getElementById('atbt').textContent=ts[pid]||'';
+}
+
+// ════════════════════════════════
+// ÉTUDIANT
+// ════════════════════════════════
+function showStu(){
+  sw('vs');
+  const u=CU;
+  const ini=u.nom.split(' ').slice(0,2).map(n=>n[0]).join('');
+  document.getElementById('sav').textContent=ini;
+  document.getElementById('snm').textContent=u.nom.split(' ').slice(0,2).join(' ');
+  document.getElementById('wbn').textContent='Bonjour, '+u.nom.split(' ')[0]+' 👋';
+  document.getElementById('wbm').textContent='MSPT · '+u.niv+' · '+u.id;
+  document.getElementById('wbbt').textContent='MSPT – '+u.niv;
+  document.getElementById('pfnm').textContent=u.nom;
+  document.getElementById('pfmt').textContent=u.id;
+  document.getElementById('pfniv').textContent=u.niv;
+  const pub=DB.cours.filter(c=>c.stat==='publié');
+  document.getElementById('scbdg').textContent=pub.length;
+  document.getElementById('sanbdg').textContent=DB.ann.length;
+  if(DB.ann.length>0){
+    document.getElementById('annbtxt').innerHTML='<strong>'+DB.ann[0].tit+'</strong>';
+    document.getElementById('annbd').textContent=DB.ann[0].date;
+    document.getElementById('annbtn').onclick=()=>snav(document.querySelector('[onclick*=ps-ann]'),'ps-ann');
+  }
+  renderMods();renderCoursList();renderStuAnn();
+  document.getElementById('ls1').textContent=DB.etu.filter(e=>e.stat==='actif').length;
+  document.getElementById('ls2').textContent=pub.length;
+}
+
+function renderMods(){
+  const pub=DB.cours.filter(c=>c.stat==='publié');
+  document.getElementById('mgrid').innerHTML=MODS.map(m=>{
+    const mc=pub.filter(c=>c.mod===m.tit);
+    const types=[...new Set(mc.map(c=>c.type))];
+    return `<div class="mc" style="--mca:${m.acc};--mcbg:${m.bg}" onclick="openMod('${m.tit}')">
+      <div class="mct"><div class="mcico">${m.ico}</div><div class="mcbd">${m.bdg==='new'?'<span class="bnew">Nouveau</span>':''}${m.bdg==='upd'?'<span class="bupd">MàJ</span>':''}</div></div>
+      <div class="mctit">${m.tit}</div>
+      <div class="mcsub">${mc.length} cours disponible${mc.length>1?'s':''}</div>
+      <div class="mcft"><div class="mctags">${types.length?types.map(t=>`<span class="mctag">${t}</span>`).join(''):'<span class="mctag">Aucun cours</span>'}</div><span style="font-size:.83rem;color:var(--muted);">→</span></div>
+    </div>`;
+  }).join('');
+}
+
+function openMod(modTit){renderCoursList('',modTit);snav(document.querySelector('[onclick*=ps-cours]'),'ps-cours');}
+
+function renderCoursList(srch='',mf=''){
+  const pub=DB.cours.filter(c=>{
+    const sm=!srch||c.tit.toLowerCase().includes(srch.toLowerCase())||c.mod.toLowerCase().includes(srch.toLowerCase());
+    const mm=!mf||c.mod===mf;
+    return c.stat==='publié'&&sm&&mm;
+  });
+  document.getElementById('csub').textContent=mf?`${pub.length} cours · ${mf}`:`${pub.length} cours publiés · MSPT`;
+  const tico={PDF:'📄',Vidéo:'🎬',PPTX:'📊',Document:'📋'};
+  const tbg={PDF:'fp',Vidéo:'fv',PPTX:'fd',Document:'fd'};
+  document.getElementById('clist').innerHTML=pub.length===0
+    ?'<div class="empty">📭 Aucun cours disponible pour le moment.</div>'
+    :pub.map(c=>`<div class="cli" onclick="openReader(${c.id})">
+        <div class="clii fico ${tbg[c.type]||'fd'}">${tico[c.type]||'📋'}</div>
+        <div class="clib"><div class="clit">${c.tit}</div><div class="clim">${c.mod} · Niveau ${c.niv} · ${c.date}</div></div>
+        <span class="clibdg">${c.type}</span>
+        <span style="font-size:.9rem;color:var(--muted);">→</span>
+      </div>`).join('');
+}
+
+function ssrch(v){const act=document.querySelector('#vs .pg.on');if(act&&act.id==='ps-cours')renderCoursList(v);}
+
+function openReader(id){
+  const c=DB.cours.find(x=>x.id===id);if(!c)return;
+  const tico={PDF:'📄',Vidéo:'🎬',PPTX:'📊',Document:'📋'};
+  const tbg={PDF:'rgba(192,57,43,0.1)',Vidéo:'rgba(18,81,211,0.1)',PPTX:'rgba(16,185,129,0.1)',Document:'rgba(16,185,129,0.1)'};
+  document.getElementById('rdico').textContent=tico[c.type]||'📋';
+  document.getElementById('rdico').style.background=tbg[c.type]||'rgba(15,25,35,.06)';
+  document.getElementById('rdtit').textContent=c.tit;
+  document.getElementById('rdmet').textContent=c.mod+' · MSPT '+c.niv+' · '+c.date;
+  const lnk=c.lien||'#';
+  document.getElementById('rdopen').href=lnk;
+  document.getElementById('rddl').href=lnk;
+  document.getElementById('phic').textContent=tico[c.type]||'📋';
+  document.getElementById('phtit').textContent=c.tit;
+  document.getElementById('phlnk').href=lnk;
+  if(!c.lien){
+    document.getElementById('phsub').textContent='Ce cours n\'a pas encore de lien associé. Contactez l\'administration.';
+    document.getElementById('phlnk').style.display='none';
+    document.getElementById('rdopen').style.opacity='.4';document.getElementById('rdopen').style.pointerEvents='none';
+  }else{
+    document.getElementById('phsub').textContent='Le fichier est hébergé sur Google Drive. Cliquez pour l\'ouvrir dans un nouvel onglet.';
+    document.getElementById('phlnk').style.display='';
+    document.getElementById('rdopen').style.opacity='';document.getElementById('rdopen').style.pointerEvents='';
+  }
+  snav(null,'ps-reader');
+}
+
+function renderStuAnn(){
+  document.getElementById('sannlist').innerHTML=DB.ann.length===0
+    ?'<div class="empty">📭 Aucune annonce pour le moment.</div>'
+    :DB.ann.map(a=>`<div class="ani"><div class="aniic">${a.urg?'🔴':'📣'}</div><div class="anib"><div class="anit">${a.tit}</div><div class="anim">${a.msg}</div><div class="anif"><span class="anic ${a.urg?'acr':'acb'}">${a.cib}</span><span class="anid">${a.date}</span></div></div></div>`).join('');
+}
+
+// ════════════════════════════════
+// ADMIN
+// ════════════════════════════════
+function showAdm(){
+  sw('va');
+  renderKpi();renderACours();renderAAnn();renderAMat();renderModStat();renderActLog();
+  document.getElementById('acbdg').textContent=DB.cours.filter(c=>c.stat==='publié').length;
+}
+function renderKpi(){
+  document.getElementById('k1').textContent=DB.etu.filter(e=>e.stat==='actif').length;
+  document.getElementById('k2').textContent=DB.cours.filter(c=>c.stat==='publié').length;
+  document.getElementById('k3').textContent=DB.cours.filter(c=>c.stat==='brouillon').length;
+  document.getElementById('k4').textContent=DB.ann.length;
+}
+
+let AF='all',AS='';
+function afilt(btn,f){document.querySelectorAll('#pa-cours .chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on');AF=f;renderACours();}
+function asrch(v){AS=v.toLowerCase();renderACours();}
+function renderACours(){
+  const tico={PDF:'📄',Vidéo:'🎬',PPTX:'📊',Document:'📋'};
+  const tbg={PDF:'fp',Vidéo:'fv',PPTX:'fd',Document:'fd'};
+  const sc={publié:'sp',brouillon:'sd'};const si={publié:'🟢',brouillon:'🟡'};
+  const rows=DB.cours.filter(c=>{
+    const fm=AF==='all'||c.stat===AF;
+    const fs=!AS||c.tit.toLowerCase().includes(AS)||c.mod.toLowerCase().includes(AS);
+    return fm&&fs;
+  });
+  document.getElementById('acbody').innerHTML=rows.map(c=>`
+    <tr>
+      <td><div class="fc"><div class="fico ${tbg[c.type]||'fd'}">${tico[c.type]||'📋'}</div><div><div class="fn">${c.tit}</div><div class="fs">${c.date}</div></div></div></td>
+      <td style="font-size:.73rem;max-width:160px;">${c.mod}</td>
+      <td>${c.niv}</td>
+      <td><span class="sb2" style="background:rgba(15,25,35,.06);color:var(--muted);">${c.type}</span></td>
+      <td><span class="sb2 ${sc[c.stat]||'sa'}">${si[c.stat]||'⬛'} ${c.stat}</span></td>
+      <td><div class="abt">
+        ${c.stat==='brouillon'?`<button class="ab pub" onclick="pubC(${c.id})">✅ Publier</button>`:''}
+        ${c.lien?`<a href="${c.lien}" target="_blank" class="ab">🔗</a>`:''}
+        <button class="ab" onclick="editC(${c.id})">✏️</button>
+        <button class="ab del" onclick="openDel(${c.id},'${c.tit.replace(/'/g,"\\'")}')">🗑️</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function pubC(id){const c=DB.cours.find(x=>x.id===id);if(c){c.stat='publié';sva();renderACours();renderKpi();addAct('Cours publié : '+c.tit,'dg');toast('✅ Cours publié : '+c.tit);}}
+
+let delId=null;
+function openDel(id,nm){delId=id;document.getElementById('deltgt').textContent=nm;document.getElementById('mdel').classList.add('on');}
+function confDel(){const i=DB.cours.findIndex(x=>x.id===delId);if(i>-1){addAct('Cours supprimé : '+DB.cours[i].tit,'dr');DB.cours.splice(i,1);sva();renderACours();renderKpi();renderModStat();toast('🗑️ Supprimé');}cm('mdel');}
+
+function editC(id){
+  const c=DB.cours.find(x=>x.id===id);if(!c)return;
+  document.getElementById('uTit').value=c.tit;
+  document.getElementById('uProf').value=c.prof||'';
+  document.getElementById('uMod').value=c.mod;
+  document.getElementById('uNiv').value=c.niv;
+  document.getElementById('uType').value=c.type;
+  document.getElementById('uStat').value=c.stat;
+  document.getElementById('uLnk').value=c.lien||'';
+  document.getElementById('uDesc').value=c.desc||'';
+  document.getElementById('uTit').dataset.eid=id;
+  anav(document.querySelector('[onclick*=pa-upload]'),'pa-upload');
+  toast('✏️ Mode édition activé');
+}
+
+function submitC(){
+  const tit=document.getElementById('uTit').value.trim();
+  const mod=document.getElementById('uMod').value;
+  const niv=document.getElementById('uNiv').value;
+  const lnk=document.getElementById('uLnk').value.trim();
+  if(!tit||!mod||!niv){toast('⚠️ Titre, module et niveau sont requis');return;}
+  const now=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+  const eid=document.getElementById('uTit').dataset.eid;
+  if(eid){
+    const c=DB.cours.find(x=>x.id===parseInt(eid));
+    if(c){c.tit=tit;c.mod=mod;c.niv=niv;c.type=document.getElementById('uType').value;c.stat=document.getElementById('uStat').value;c.lien=lnk;c.desc=document.getElementById('uDesc').value;c.prof=document.getElementById('uProf').value;}
+    delete document.getElementById('uTit').dataset.eid;
+    addAct('Cours modifié : '+tit,'dgo');toast('✅ Cours modifié !');
+  }else{
+    const nc={id:Date.now(),tit,mod,niv,type:document.getElementById('uType').value,stat:document.getElementById('uStat').value,lien:lnk,desc:document.getElementById('uDesc').value,prof:document.getElementById('uProf').value,date:now};
+    DB.cours.unshift(nc);
+    addAct('Cours ajouté : '+tit,nc.stat==='publié'?'dg':'dgo');
+    toast(nc.stat==='publié'?'✅ Cours publié !':'💾 Enregistré en brouillon');
+  }
+  sva();resetU();renderACours();renderKpi();renderModStat();
+  anav(document.querySelector('[onclick*=pa-cours]'),'pa-cours');
+}
+
+function resetU(){['uTit','uProf','uLnk','uDesc'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});delete document.getElementById('uTit').dataset.eid;document.getElementById('uMod').value='';document.getElementById('uNiv').value='';}
+
+function renderAAnn(){
+  document.getElementById('aannlist').innerHTML=DB.ann.length===0
+    ?'<div class="empty">📭 Aucune annonce.</div>'
+    :DB.ann.map(a=>`<div class="ani"><div class="aniic">${a.urg?'🔴':'📣'}</div><div class="anib"><div class="anit">${a.tit}</div><div class="anim">${a.msg}</div><div class="anif"><span class="anic acb">${a.cib}</span><span class="anid">${a.date}</span></div></div><div class="abt"><button class="ab del" onclick="delAnn(${a.id})">🗑️</button></div></div>`).join('');
+}
+function openAnn(){document.getElementById('antit').value='';document.getElementById('anmsg').value='';document.getElementById('mann').classList.add('on');}
+function pubAnn(){
+  const t=document.getElementById('antit').value.trim();if(!t){toast('⚠️ Ajoutez un titre');return;}
+  const now=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+  DB.ann.unshift({id:Date.now(),tit:t,msg:document.getElementById('anmsg').value,cib:document.getElementById('antgt').value,date:now,urg:false});
+  sva();renderAAnn();renderKpi();cm('mann');addAct('Annonce publiée : '+t,'dgo');toast('📣 Annonce publiée !');
+}
+function delAnn(id){const i=DB.ann.findIndex(a=>a.id===id);if(i>-1){DB.ann.splice(i,1);sva();renderAAnn();renderKpi();toast('🗑️ Annonce supprimée');}}
+
+let MF='all',MS='';
+function filtMat(btn,f){document.querySelectorAll('#pa-mat .chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on');MF=f;renderAMat();}
+function srchMat(v){MS=v.toLowerCase();renderAMat();}
+function renderAMat(){
+  const rows=DB.etu.filter(e=>{
+    const fm=MF==='all'||e.stat===MF;
+    const fs=!MS||e.id.toLowerCase().includes(MS)||e.nom.toLowerCase().includes(MS);
+    return fm&&fs;
+  });
+  const sc={actif:'sp',attente:'sd'};const si={actif:'🟢',attente:'🟡'};
+  document.getElementById('matbody').innerHTML=rows.map(e=>`
+    <tr>
+      <td><code style="background:var(--cream);padding:2px 7px;border-radius:4px;font-size:.72rem;">${e.id}</code></td>
+      <td style="font-weight:600;">${e.nom}</td>
+      <td>${e.niv}</td>
+      <td><span class="sb2 ${sc[e.stat]||'sa'}">${si[e.stat]||'⬛'} ${e.stat}</span></td>
+      <td><div class="abt">
+        ${e.stat==='attente'?`<button class="ab pub" onclick="valMat('${e.id}')">✅ Valider</button>`:''}
+        ${e.stat==='actif'?`<button class="ab del" onclick="desMat('${e.id}')">Désactiver</button>`:''}
+        <button class="ab del" onclick="delMat('${e.id}')">🗑️</button>
+      </div></td>
+    </tr>`).join('');
+}
+function addMat(){
+  const m=document.getElementById('nmat').value.trim().toUpperCase();
+  const n=document.getElementById('nnom').value.trim();
+  if(!m||!n){toast('⚠️ Matricule et nom requis');return;}
+  if(DB.etu.find(e=>e.id===m)){toast('⚠️ Ce matricule existe déjà');return;}
+  DB.etu.unshift({id:m,nom:n,niv:document.getElementById('nniv').value,stat:document.getElementById('nstat').value});
+  sva();renderAMat();renderKpi();
+  document.getElementById('nmat').value='';document.getElementById('nnom').value='';
+  document.getElementById('amfm').classList.remove('on');
+  addAct('Matricule ajouté : '+m,'db');toast('✅ Matricule ajouté : '+m);
+}
+function valMat(id){const e=DB.etu.find(x=>x.id===id);if(e){e.stat='actif';sva();renderAMat();renderKpi();toast('✅ Validé : '+id);}}
+function desMat(id){const e=DB.etu.find(x=>x.id===id);if(e){e.stat='désactivé';sva();renderAMat();renderKpi();toast('🔴 Désactivé : '+id);}}
+function delMat(id){const i=DB.etu.findIndex(x=>x.id===id);if(i>-1){DB.etu.splice(i,1);sva();renderAMat();renderKpi();toast('🗑️ Supprimé : '+id);}}
+
+function renderModStat(){
+  const pub=DB.cours.filter(c=>c.stat==='publié');
+  const max=Math.max(1,...MODS.map(m=>pub.filter(c=>c.mod===m.tit).length));
+  document.getElementById('modstat').innerHTML=MODS.map(m=>{
+    const cnt=pub.filter(c=>c.mod===m.tit).length;
+    const pct=Math.round(cnt/max*100);
+    return `<div class="brow"><div class="brla"><span>${m.tit.split(' ').slice(0,2).join(' ')}</span><span style="color:var(--muted);font-size:.7rem;">${cnt} cours</span></div><div class="brtr"><div class="brfi" style="width:${pct}%"></div></div></div>`;
+  }).join('');
+}
+function addAct(t,d){DB.act.unshift({t,m:'À l\'instant',d});if(DB.act.length>15)DB.act.pop();sva();renderActLog();}
+function renderActLog(){
+  document.getElementById('actlog').innerHTML=DB.act.slice(0,7).map(a=>`<div class="acti"><div class="actd ${a.d}"></div><div class="actt">${a.t}</div><div class="actm">${a.m}</div></div>`).join('');
+}
+
+// CONFIG
+function chgPw(){
+  const o=document.getElementById('cpw1').value,n=document.getElementById('cpw2').value,c=document.getElementById('cpw3').value;
+  if(o!==DB.pw){toast('⚠️ Mot de passe actuel incorrect');return;}
+  if(n.length<4){toast('⚠️ Minimum 4 caractères');return;}
+  if(n!==c){toast('⚠️ Les mots de passe ne correspondent pas');return;}
+  DB.pw=n;sva();['cpw1','cpw2','cpw3'].forEach(id=>document.getElementById(id).value='');toast('🔒 Mot de passe changé !');
+}
+function resetAll(){
+  if(!confirm('⚠️ Réinitialiser TOUTES les données ? Cette action est irréversible.'))return;
+  DB={cours:JSON.parse(JSON.stringify(COURS0)),etu:JSON.parse(JSON.stringify(ETU0)),ann:JSON.parse(JSON.stringify(ANN0)),act:JSON.parse(JSON.stringify(ACT0)),pw:'admin123'};
+  sva();showAdm();toast('♻️ Données réinitialisées');
+}
+
+// MODAL & TOAST
+function cm(id){document.getElementById(id).classList.remove('on');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.mov.on').forEach(m=>m.classList.remove('on'));});
+document.querySelectorAll('.mov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on');}));
+let TT;
+function toast(m){clearTimeout(TT);const e=document.getElementById('toast');e.textContent=m;e.classList.add('on');TT=setTimeout(()=>e.classList.remove('on'),3200);}
+
+// INIT STATS
+document.getElementById('ls1').textContent=DB.etu.filter(e=>e.stat==='actif').length;
+document.getElementById('ls2').textContent=DB.cours.filter(c=>c.stat==='publié').length;
+</script>
+</body>
+</html>
