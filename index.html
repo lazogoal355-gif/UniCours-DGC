@@ -324,7 +324,7 @@ code.mat{background:var(--cream);padding:3px 9px;border-radius:5px;font-size:.78
         </div>
         <div id="errMsg" class="errt">Matricule non reconnu ou compte inactif.</div>
       </div>
-      <div class="hint">💡 <strong>Démo :</strong> Étudiant → <code>2025MSPT001</code> &nbsp;|&nbsp; Admin → <code>ADMIN</code><br><span style="font-size:.67rem;">Accès réservé à l'administrateur</span></div>
+      <div class="hint">💡 <strong>Connexion :</strong> Matricule étudiant (ex: <code>FI-2026-082</code>) &nbsp;|&nbsp; Admin → <code>ADMIN</code><br><span style="font-size:.67rem;">Accès réservé à l'administrateur</span></div>
       <button class="btnlg" onclick="login()"><span id="btxt">Accéder à mon espace</span><span>→</span></button>
       <div class="lcft">UniLearn · MSPT · Accès sécurisé par matricule</div>
     </div>
@@ -612,10 +612,69 @@ const COURS0 = [
   {id:8,tit:'Cours 1 — Démarche QHS en industrie',            mod:'Qualité, Hygiène et Sécurité',niv:'L1',type:'PDF',stat:'publié',lien:'https://drive.google.com',desc:'',date:'15 Mai 2025'},
 ];
 const ETU0 = [
-  {id:'2025MSPT001',nom:'Kouassi Brice Marius',niv:'L1',stat:'actif'},
-  {id:'2025MSPT002',nom:'Mbemba Clarisse N.',  niv:'L2',stat:'actif'},
-  {id:'2025MSPT003',nom:'Bitsindou Franck',    niv:'L1',stat:'actif'},
-  {id:'2025MSPT004',nom:'Nzita Gloria',        niv:'L3',stat:'attente'},
+  {id:'FI-2026-082',nom:'NDOLO-DAVID Styven Mivec',niv:'L1',stat:'actif'},
+  {id:'FI-2026-134',nom:'PANDI Manacé',niv:'L1',stat:'actif'},
+  {id:'FI-2026-094',nom:'NTOULA TATI Bénicia',niv:'L1',stat:'actif'},
+  {id:'FI-2026-143',nom:'NSOUNGA-GUEMPIO Bénicia Luciane',niv:'L1',stat:'actif'},
+  {id:'FI-2026-125',nom:'N\'TCHIBINZA MISSAKILA Jessica Rodline',niv:'L1',stat:'actif'},
+  {id:'FI-2026-019',nom:'BOUTOUMONGATE Dieudonné Junior',niv:'L1',stat:'actif'},
+  {id:'FI-2026-014',nom:'BILOUNGA Guy Aristide',niv:'L1',stat:'actif'},
+  {id:'FI-2026-030',nom:'IBATA Clarke Ruben Le Sage',niv:'L1',stat:'actif'},
+  {id:'FI-2026-104',nom:'SANTOUS Emilliano Sagesse',niv:'L1',stat:'actif'},
+  {id:'FI-2026-017',nom:'BOUESSO DE-BROGLI Samuel',niv:'L1',stat:'actif'},
+  {id:'FI-2026-080',nom:'MOUNGOLO Jemima Ketura',niv:'L1',stat:'actif'},
+  {id:'FI-2024-073',nom:'VABA-MAKAYA Mickael Divin',niv:'L2',stat:'actif'},
+  {id:'FI-2026-BOUITY',nom:'BOUITY MERCIA ELSY',niv:'L1',stat:'actif'},
+  {id:'FI-2026-069',nom:'MIANTOUDILA Marlyse Ronelvie',niv:'L1',stat:'actif'},
+  {id:'FI-2026-004',nom:'BANGUELA Orman Michée',niv:'L1',stat:'actif'},
+  {id:'FI-2026-113',nom:'TOUNGOU Sara Prélude',niv:'L1',stat:'actif'},
+  {id:'FI-2026-015',nom:'BIYEKELE Christelle Alda',niv:'L1',stat:'actif'},
+  {id:'FI-2026-120',nom:'MATSOUMA-BOUKONZO Leïda-Sephora',niv:'L1',stat:'actif'},
+  {id:'FI-2026-060',nom:'MAYALA Armand Emmanuel',niv:'L1',stat:'actif'},
+  {id:'FI-2026-065',nom:'MBOUMBA Myriam Lucie',niv:'L1',stat:'actif'},
+  {id:'FI-2026-004B',nom:'ANTHONY-MOUCK Auxane-Gibora',niv:'L1',stat:'actif'},
+  {id:'FI-2025-036',nom:'NKOMBO MPOLO Sterilia Orciilia',niv:'L2',stat:'actif'},
+  {id:'FI-2026-016',nom:'BOMDA MBONDA Emmanuel Bryan',niv:'L1',stat:'actif'},
+  {id:'FI-2026-051',nom:'MAKOSSO Brel Jordy',niv:'L1',stat:'actif'},
+  {id:'FI-2026-036',nom:'KIBIMI MAVOUATA Christ Wilson Fred',niv:'L1',stat:'actif'},
+  {id:'FI-2026-038',nom:'KIMANGOU MOUNGOUNOU Terach Cedrik Gaël',niv:'L1',stat:'actif'},
+  {id:'FI-2026-126',nom:'MAKOSSO Ducerne Dieu-Merci',niv:'L1',stat:'actif'},
+  {id:'FI-2026-112',nom:'TOUKAS JONZO Moïse Gabriel',niv:'L1',stat:'actif'},
+  {id:'FI-2026-075',nom:'MOUANDA Eldest Dieuvany',niv:'L1',stat:'actif'},
+  {id:'FI-2026-073',nom:'MIZELE Jostin Iverson',niv:'L1',stat:'actif'},
+  {id:'FI-2026-117',nom:'YOMBO Syntiche Marie Ninelle',niv:'L1',stat:'actif'},
+  {id:'FI-2026-085',nom:'NGANDZA Nevile Valda',niv:'L1',stat:'actif'},
+  {id:'FI-2026-078',nom:'MOUANDZA Celeste Prodige',niv:'L1',stat:'actif'},
+  {id:'FI-2026-062',nom:'MBANI Rish',niv:'L1',stat:'actif'},
+  {id:'FI-2026-107',nom:'TAKA-TAMO Paul Christian',niv:'L1',stat:'actif'},
+  {id:'FI-2026-057',nom:'MANKOU MPIKA Stone',niv:'L1',stat:'actif'},
+  {id:'FI-2026-063',nom:'MBOU Albert Jolane',niv:'L1',stat:'actif'},
+  {id:'FI-2026-011',nom:'BAZENGUISSA Falia Dorvick',niv:'L1',stat:'actif'},
+  {id:'FI-2026-033',nom:'ITOUA Urvel Faol',niv:'L1',stat:'actif'},
+  {id:'FI-2026-076',nom:'MOUANDA TCHICAYA Cathie Mérite',niv:'L1',stat:'actif'},
+  {id:'FI-2026-121',nom:'MIATH Coeurcie Oswald Jeffrey',niv:'L1',stat:'actif'},
+  {id:'FI-2026-123',nom:'BOUNGOU Fadi Audry',niv:'L1',stat:'actif'},
+  {id:'FI-2026-008',nom:'BASSOUMBA Emmanuel',niv:'L1',stat:'actif'},
+  {id:'FI-2026-083',nom:'NGAHOUA Vincess Benja',niv:'L1',stat:'actif'},
+  {id:'FI-2026-110',nom:'TCHIMBOUNGOU Elzia Jonathan',niv:'L1',stat:'actif'},
+  {id:'FI-2026-067',nom:'MBOUNGOU Turbie Laeticia',niv:'L1',stat:'actif'},
+  {id:'FI-2026-035',nom:'KIBAMBA PINDOU Cedric',niv:'L1',stat:'actif'},
+  {id:'FI-2026-045',nom:'MADINGOU TCHIBINDA Bijoux Privilège',niv:'L1',stat:'actif'},
+  {id:'FI-2026-034',nom:'ITOUA-NGANCKENY Obtner Exaucé',niv:'L1',stat:'actif'},
+  {id:'FI-2026-054',nom:'MALONGA Ghiraldine Amour Immaculée',niv:'L1',stat:'actif'},
+  {id:'FI-2026-103',nom:'TCHICAYA U\'kan\' Miliel Gaspard',niv:'L1',stat:'actif'},
+  {id:'FI-2026-055',nom:'MAMBOUKU Yanne Sarah',niv:'L1',stat:'actif'},
+  {id:'FI-2026-BUYOU',nom:'BUYOU Degloire',niv:'L1',stat:'actif'},
+  {id:'FI-2026-134B',nom:'TATY COSTODES Fina Junior U\'vitchik',niv:'L1',stat:'actif'},
+  {id:'FI-2026-086',nom:'NGAYI Cyrtie Elysia',niv:'L1',stat:'actif'},
+  {id:'FI-2026-111',nom:'TCHINIANGA Marie Jeanne',niv:'L1',stat:'actif'},
+  {id:'FI-2026-048',nom:'MAHOUNGOU MAMPEMBE Laura Très-Cher',niv:'L1',stat:'actif'},
+  {id:'FI-2026-077',nom:'MOUANDA TCHICAYA Géra Destinée',niv:'L1',stat:'actif'},
+  {id:'FI-2026-046',nom:'MADZOU NZELY Migradi Ke-Monica',niv:'L1',stat:'actif'},
+  {id:'FI-2026-136',nom:'PAKA MBOMI Denissia Marielle',niv:'L1',stat:'actif'},
+  {id:'FI-2026-095',nom:'NTOUNDA BANSIMBA Grâce Désiré',niv:'L1',stat:'actif'},
+  {id:'FI-2026-137',nom:'MPONGUI LOUNTALA Cabrell Nobel',niv:'L1',stat:'actif'},
+  {id:'FI-2026-006',nom:'BANZOUZI Madness Lorraine',niv:'L1',stat:'actif'},
 ];
 const ANN0 = [{id:1,tit:'Bienvenue sur UniLearn MSPT !',msg:'La plateforme est en ligne. Accédez à vos cours depuis votre tableau de bord.',cib:'Tous les étudiants',date:'Aujourd\'hui',urg:false}];
 const ACT0 = [
@@ -629,9 +688,19 @@ const ACT0 = [
 // ════════════════════════════════
 function ld(k,def){try{const v=localStorage.getItem('ul_'+k);return v?JSON.parse(v):def;}catch{return def;}}
 function sv(k,v){try{localStorage.setItem('ul_'+k,JSON.stringify(v));}catch{}}
-let DB={cours:ld('cours',COURS0),etu:ld('etu',ETU0),ann:ld('ann',ANN0),act:ld('act',ACT0),pw:'DGC-CONGO2026'};
+// SYNC : cours, étudiants et annonces viennent toujours du fichier HTML (source de vérité)
+// Seuls le mot de passe et l'activité sont conservés en localStorage
+let DB={
+  cours: JSON.parse(JSON.stringify(COURS0)),
+  etu:   JSON.parse(JSON.stringify(ETU0)),
+  ann:   JSON.parse(JSON.stringify(ANN0)),
+  act:   ld('act', ACT0),
+  pw:    ld('pw','DGC-CONGO2026')
+};
+// Forcer la synchro du mot de passe au cas où il aurait été changé
+sv('pw', DB.pw);
 sv('pw','DGC-CONGO2026');
-function sva(){sv('cours',DB.cours);sv('etu',DB.etu);sv('ann',DB.ann);sv('act',DB.act);sv('pw',DB.pw);}
+function sva(){sv('act',DB.act);sv('pw',DB.pw);} // cours/etu/ann viennent du fichier HTML
 
 // ════════════════════════════════
 // AUTH
@@ -974,7 +1043,7 @@ function chgPw(){
 }
 function resetAll(){
   if(!confirm('⚠️ Réinitialiser TOUTES les données ? Cette action est irréversible.'))return;
-  DB={cours:JSON.parse(JSON.stringify(COURS0)),etu:JSON.parse(JSON.stringify(ETU0)),ann:JSON.parse(JSON.stringify(ANN0)),act:JSON.parse(JSON.stringify(ACT0)),pw:'DGC-CONGO2026'};
+  DB={cours:JSON.parse(JSON.stringify(COURS0)),etu:JSON.parse(JSON.stringify(ETU0)),ann:JSON.parse(JSON.stringify(ANN0)),act:JSON.parse(JSON.stringify(ACT0)),pw:ld('pw','DGC-CONGO2026')};
   sva();showAdm();toast('♻️ Données réinitialisées');
 }
 
