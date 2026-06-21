@@ -683,24 +683,73 @@ const ACT0 = [
   {t:'Annonce publiée : Bienvenue UniLearn',m:'Il y a 2 jours',d:'dgo'},
 ];
 
-// ════════════════════════════════
-// STORAGE
-// ════════════════════════════════
-function ld(k,def){try{const v=localStorage.getItem('ul_'+k);return v?JSON.parse(v):def;}catch{return def;}}
-function sv(k,v){try{localStorage.setItem('ul_'+k,JSON.stringify(v));}catch{}}
-// SYNC : cours, étudiants et annonces viennent toujours du fichier HTML (source de vérité)
-// Seuls le mot de passe et l'activité sont conservés en localStorage
-let DB={
+
+// ════════════════════════════════════════════════════════════
+// FIREBASE — BASE DE DONNÉES TEMPS RÉEL
+// ════════════════════════════════════════════════════════════
+const FIREBASE_URL = 'https://unilearn-mspt-default-rtdb.europe-west1.firebasedatabase.app';
+
+// Mot de passe admin (stocké localement uniquement)
+function getPw(){try{return localStorage.getItem('ul_pw')||'DGC-CONGO2026';}catch{return 'DGC-CONGO2026';}}
+function setPw(v){try{localStorage.setItem('ul_pw',v);}catch{}}
+
+// ── DB locale (remplie depuis Firebase au chargement) ──
+let DB = {
   cours: JSON.parse(JSON.stringify(COURS0)),
   etu:   JSON.parse(JSON.stringify(ETU0)),
   ann:   JSON.parse(JSON.stringify(ANN0)),
-  act:   ld('act', ACT0),
-  pw:    ld('pw','DGC-CONGO2026')
+  act:   JSON.parse(JSON.stringify(ACT0)),
 };
-// Forcer la synchro du mot de passe au cas où il aurait été changé
-sv('pw', DB.pw);
-sv('pw','DGC-CONGO2026');
-function sva(){sv('act',DB.act);sv('pw',DB.pw);} // cours/etu/ann viennent du fichier HTML
+
+// ── Loader visuel ──
+function showLoader(show) {
+  const el = document.getElementById('global-loader');
+  if (!el) return;
+  el.style.display = show ? 'flex' : 'none';
+}
+
+// ── Chargement depuis Firebase ──
+async function dbLoad() {
+  showLoader(true);
+  try {
+    const r = await fetch(FIREBASE_URL + '/data.json');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    if (data && typeof data === 'object') {
+      if (Array.isArray(data.cours) && data.cours.length > 0) DB.cours = data.cours;
+      if (Array.isArray(data.etu)   && data.etu.length   > 0) DB.etu   = data.etu;
+      if (Array.isArray(data.ann)   && data.ann.length   >= 0) DB.ann  = data.ann;
+      if (Array.isArray(data.act)   && data.act.length   > 0) DB.act   = data.act;
+    } else {
+      // Première utilisation : pousser les données par défaut vers Firebase
+      await sva();
+    }
+  } catch(e) {
+    console.error('Firebase load error:', e);
+    toast('⚠️ Connexion Firebase impossible — données locales utilisées');
+  }
+  showLoader(false);
+}
+
+// ── Sauvegarde vers Firebase (appelée après chaque modification admin) ──
+async function sva() {
+  try {
+    const r = await fetch(FIREBASE_URL + '/data.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cours: DB.cours,
+        etu:   DB.etu,
+        ann:   DB.ann,
+        act:   DB.act
+      })
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+  } catch(e) {
+    console.error('Firebase save error:', e);
+    toast('⚠️ Erreur sauvegarde Firebase — vérifiez votre connexion');
+  }
+}
 
 // ════════════════════════════════
 // AUTH
@@ -719,7 +768,7 @@ function login(){
   },500);
 }
 function chkPw(){
-  if(document.getElementById('pwinp').value===DB.pw){cm('mpw');CU={role:'admin'};showAdm();}
+  if(document.getElementById('pwinp').value===getPw()){cm('mpw');CU={role:'admin'};showAdm();}
   else document.getElementById('pwerr').classList.add('on');
 }
 function logout(){CU=null;sw('vl');document.getElementById('matInp').value='';clearE();toast('👋 Déconnexion réussie');}
@@ -1036,14 +1085,14 @@ function renderActLog(){
 // CONFIG
 function chgPw(){
   const o=document.getElementById('cpw1').value,n=document.getElementById('cpw2').value,c=document.getElementById('cpw3').value;
-  if(o!==DB.pw){toast('⚠️ Mot de passe actuel incorrect');return;}
+  if(o!==getPw()){toast('⚠️ Mot de passe actuel incorrect');return;}
   if(n.length<4){toast('⚠️ Minimum 4 caractères');return;}
   if(n!==c){toast('⚠️ Les mots de passe ne correspondent pas');return;}
-  DB.pw=n;sva();['cpw1','cpw2','cpw3'].forEach(id=>document.getElementById(id).value='');toast('🔒 Mot de passe changé !');
+  setPw(n);['cpw1','cpw2','cpw3'].forEach(id=>document.getElementById(id).value='');toast('🔒 Mot de passe changé !');
 }
 function resetAll(){
   if(!confirm('⚠️ Réinitialiser TOUTES les données ? Cette action est irréversible.'))return;
-  DB={cours:JSON.parse(JSON.stringify(COURS0)),etu:JSON.parse(JSON.stringify(ETU0)),ann:JSON.parse(JSON.stringify(ANN0)),act:JSON.parse(JSON.stringify(ACT0)),pw:ld('pw','DGC-CONGO2026')};
+  DB={cours:JSON.parse(JSON.stringify(COURS0)),etu:JSON.parse(JSON.stringify(ETU0)),ann:JSON.parse(JSON.stringify(ANN0)),act:JSON.parse(JSON.stringify(ACT0))};
   sva();showAdm();toast('♻️ Données réinitialisées');
 }
 
