@@ -690,6 +690,15 @@ const ACT0 = [
 const FIREBASE_URL = 'https://unilearn-mspt-default-rtdb.europe-west1.firebasedatabase.app';
 
 // Mot de passe admin (stocké localement uniquement)
+// Forcer le mot de passe à jour au chargement
+(function(){try{
+  const stored = localStorage.getItem('ul_pw');
+  // Si aucun mot de passe stocké OU si c'est un ancien mot de passe, on force le bon
+  const validPw = 'DGC-CONGO2026';
+  if(!stored || stored === 'admin123' || stored === 'DGC-CONGO2025'){
+    localStorage.setItem('ul_pw', validPw);
+  }
+}catch(e){}})();
 function getPw(){try{return localStorage.getItem('ul_pw')||'DGC-CONGO2026';}catch{return 'DGC-CONGO2026';}}
 function setPw(v){try{localStorage.setItem('ul_pw',v);}catch{}}
 
