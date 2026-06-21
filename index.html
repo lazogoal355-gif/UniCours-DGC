@@ -1112,6 +1112,12 @@ document.querySelectorAll('.mov').forEach(o=>o.addEventListener('click',e=>{if(e
 let TT;
 function toast(m){clearTimeout(TT);const e=document.getElementById('toast');e.textContent=m;e.classList.add('on');TT=setTimeout(()=>e.classList.remove('on'),3200);}
 
+// INIT — Effacer tout l'ancien localStorage et imposer le bon mot de passe
+try {
+  localStorage.clear();
+  localStorage.setItem('ul_pw','DGC-CONGO2026');
+} catch(e){}
+
 // INIT STATS
 document.getElementById('ls1').textContent=DB.etu.filter(e=>e.stat==='actif').length;
 document.getElementById('ls2').textContent=DB.cours.filter(c=>c.stat==='publié').length;
