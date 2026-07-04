@@ -764,17 +764,17 @@ async function sva() {
 // AUTH
 // ════════════════════════════════
 let CU=null;
-function login(){
+async function login(){
   const v=document.getElementById('matInp').value.trim().toUpperCase();
   if(!v){showE('Entrez votre matricule.');return;}
   document.getElementById('btxt').textContent='Vérification…';
-  setTimeout(()=>{
-    document.getElementById('btxt').textContent='Accéder à mon espace';
-    if(v==='ADMIN'){document.getElementById('pwinp').value='';document.getElementById('pwerr').classList.remove('on');document.getElementById('mpw').classList.add('on');return;}
-    const e=DB.etu.find(x=>x.id===v&&x.stat==='actif');
-    if(!e){showE('Matricule non reconnu ou compte inactif.');document.getElementById('matInp').classList.add('err');return;}
-    CU={...e,role:'student'};showStu();
-  },500);
+  // Recharger Firebase avant de vérifier le matricule
+  await dbLoad();
+  document.getElementById('btxt').textContent='Accéder à mon espace';
+  if(v==='ADMIN'){document.getElementById('pwinp').value='';document.getElementById('pwerr').classList.remove('on');document.getElementById('mpw').classList.add('on');return;}
+  const e=DB.etu.find(x=>x.id===v&&x.stat==='actif');
+  if(!e){showE('Matricule non reconnu ou compte inactif.');document.getElementById('matInp').classList.add('err');return;}
+  CU={...e,role:'student'};showStu();
 }
 function chkPw(){
   if(document.getElementById('pwinp').value===getPw()){cm('mpw');CU={role:'admin'};showAdm();}
@@ -1112,15 +1112,23 @@ document.querySelectorAll('.mov').forEach(o=>o.addEventListener('click',e=>{if(e
 let TT;
 function toast(m){clearTimeout(TT);const e=document.getElementById('toast');e.textContent=m;e.classList.add('on');TT=setTimeout(()=>e.classList.remove('on'),3200);}
 
-// INIT — Effacer tout l'ancien localStorage et imposer le bon mot de passe
-try {
-  localStorage.clear();
-  localStorage.setItem('ul_pw','DGC-CONGO2026');
-} catch(e){}
+// ── INITIALISATION ──
+// 1. Imposer le mot de passe correct (effacer seulement le mot de passe, pas tout)
+try { localStorage.setItem('ul_pw','DGC-CONGO2026'); } catch(e){}
 
-// INIT STATS
-document.getElementById('ls1').textContent=DB.etu.filter(e=>e.stat==='actif').length;
-document.getElementById('ls2').textContent=DB.cours.filter(c=>c.stat==='publié').length;
+// 2. Charger les données Firebase puis lancer l'app
+(async function init() {
+  // Mettre à jour les stats de la page login avec les données par défaut d'abord
+  document.getElementById('ls1').textContent = DB.etu.length;
+  document.getElementById('ls2').textContent = DB.cours.filter(c=>c.stat==='publié').length;
+
+  // Charger depuis Firebase
+  await dbLoad();
+
+  // Mettre à jour les stats avec les vraies données Firebase
+  document.getElementById('ls1').textContent = DB.etu.filter(e=>e.stat==='actif').length;
+  document.getElementById('ls2').textContent = DB.cours.filter(c=>c.stat==='publié').length;
+})();
 </script>
 </body>
 </html>
