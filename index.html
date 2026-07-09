@@ -282,11 +282,152 @@ code.mat{background:var(--cream);padding:3px 9px;border-radius:5px;font-size:.78
 
 .sh2{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:13px;}
 .empty{text-align:center;padding:44px;color:var(--muted);font-size:.82rem;}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE MOBILE — 768px et moins
+══════════════════════════════════════════════ */
+
+/* Overlay sidebar mobile */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(15,25,35,.55);z-index:99;backdrop-filter:blur(2px);}
+.sb-overlay.on{display:block;}
+
+/* Bouton hamburger */
+.mob-menu-btn{display:none;align-items:center;justify-content:center;width:38px;height:38px;background:none;border:none;cursor:pointer;border-radius:8px;font-size:1.3rem;transition:background .15s;}
+.mob-menu-btn:hover{background:var(--cream);}
+
+/* Barre de navigation mobile (bottom nav) */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--ink);z-index:200;padding:8px 0 env(safe-area-inset-bottom,8px);border-top:1px solid rgba(255,255,255,.08);box-shadow:0 -4px 20px rgba(15,25,35,.3);}
+.mob-nav-items{display:flex;align-items:center;justify-content:space-around;}
+.mob-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;cursor:pointer;color:rgba(255,255,255,.38);transition:color .15s;border:none;background:none;font-family:'Outfit',sans-serif;min-width:60px;}
+.mob-nav-item.on{color:var(--goldl);}
+.mob-nav-item .mni-ico{font-size:1.25rem;}
+.mob-nav-item .mni-lbl{font-size:.55rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.mob-nav-badge{position:absolute;top:-2px;right:-4px;width:16px;height:16px;background:var(--red);border-radius:50%;font-size:.5rem;font-weight:700;color:white;display:flex;align-items:center;justify-content:center;}
+.mob-nav-item-wrap{position:relative;}
+
+@media (max-width: 768px) {
+
+  /* ── LOGIN ── */
+  #vl.active{flex-direction:column;}
+  .ll{width:100%;padding:28px 24px 24px;min-height:auto;}
+  .lmid{margin:16px 0 0;}
+  .lhl{font-size:1.8rem;margin-bottom:8px;}
+  .ldesc{display:none;}
+  .mchips{display:none;}
+  .lstats{gap:18px;margin-top:16px;}
+  .lsv{font-size:1.2rem;}
+  .lr{padding:24px 20px 32px;}
+  .lctit{font-size:1.45rem;}
+  .lcsub{font-size:.78rem;margin-bottom:18px;}
+
+  /* ── APP SHELL ── */
+  .app{flex-direction:column;}
+  .sb{
+    width:280px;
+    transform:translateX(-100%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    z-index:200;
+  }
+  .sb.open{transform:translateX(0);}
+  .main{margin-left:0 !important;}
+
+  /* ── TOPBAR ── */
+  .topbar{height:52px;padding:0 14px;gap:8px;}
+  .mob-menu-btn{display:flex;}
+  .sw{display:none;}
+  .tbbtn span:not(:first-child){display:none;}
+  .tbbtn{padding:7px 10px;}
+  .tbgh{display:none;}
+
+  /* ── BOTTOM NAV visible ── */
+  .mob-nav{display:block;}
+  
+  /* ── PAGES ── */
+  .pg{padding:14px 14px 80px;}
+
+  /* ── WELCOME BAR ── */
+  .wb{border-radius:12px;padding:16px 18px;margin-bottom:14px;}
+  .wbn{font-size:1.35rem;}
+  .wbbd{display:none;}
+
+  /* ── MODULE GRID ── */
+  .mgrid{grid-template-columns:1fr 1fr;gap:10px;}
+  .mc{padding:13px 14px;}
+  .mctit{font-size:.8rem;}
+  .mcsub{font-size:.64rem;}
+  .mcft{margin-top:8px;padding-top:8px;}
+
+  /* ── COURS LIST ── */
+  .cli{padding:11px 13px;gap:10px;}
+  .clii{width:34px;height:34px;font-size:1rem;}
+  .clit{font-size:.8rem;}
+  .clim{font-size:.63rem;}
+
+  /* ── READER ── */
+  .rdhdr{flex-wrap:wrap;gap:10px;padding:13px 15px;}
+  .rdacts{margin-left:0;width:100%;display:grid;grid-template-columns:1fr 1fr;}
+  .rdbtn{justify-content:center;padding:9px 8px;font-size:.72rem;}
+  iframe#rd-iframe,iframe#rd-video-iframe{height:320px;}
+
+  /* ── KPI ── */
+  .krow{grid-template-columns:1fr 1fr;gap:9px;}
+  .kv{font-size:1.5rem;}
+  .kl{font-size:.62rem;}
+
+  /* ── DEUX COLONNES ── */
+  .two{grid-template-columns:1fr;}
+
+  /* ── TABLES ── */
+  .tw{border-radius:10px;}
+  table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  th,td{white-space:nowrap;padding:9px 11px;font-size:.72rem;}
+  .tt{flex-wrap:wrap;gap:7px;padding:10px 12px;}
+  .chips{flex-wrap:wrap;}
+
+  /* ── FORMULAIRES ── */
+  .uf{padding:15px;}
+  .fr2{grid-template-columns:1fr;}
+  .fact{flex-direction:column;}
+  .btnp,.btns{width:100%;justify-content:center;}
+
+  /* ── ANNONCES ── */
+  .ani{padding:12px 14px;}
+
+  /* ── PROFIL ── */
+  .pcard{padding:15px 16px;}
+
+  /* ── MATRICULES ── */
+  .mc2{flex-wrap:wrap;}
+  .mcsw{min-width:100%;}
+
+  /* ── MODAL ── */
+  .modal,.mw{max-width:100%;margin:0 12px;border-radius:14px;}
+  .mov.on{align-items:flex-end;padding-bottom:env(safe-area-inset-bottom,0);}
+  .modal,.mw{border-radius:18px 18px 0 0;margin:0;}
+
+  /* ── SH ── */
+  .sh,.sh2{flex-wrap:wrap;gap:8px;}
+  .sh .tbbtn,.sh2 .tbbtn{width:100%;}
+  .sht{font-size:1rem;}
+
+  /* ── ANNONCE BAR ── */
+  .annb{padding:9px 12px;}
+  .annbtxt{font-size:.74rem;}
+}
+
+@media (max-width: 400px) {
+  .mgrid{grid-template-columns:1fr;}
+  .krow{grid-template-columns:1fr 1fr;}
+  .ll{padding:22px 18px 18px;}
+  .pg{padding:12px 12px 80px;}
+}
+
 </style>
 </head>
 <body>
 
 <!-- ═══════════════ LOGIN ═══════════════ -->
+<div id="sb-overlay" class="sb-overlay" onclick="closeSb()"></div>
 <div id="vl" class="view active">
   <div class="ll">
     <div class="llg"></div>
@@ -353,7 +494,7 @@ code.mat{background:var(--cream);padding:3px 9px;border-radius:5px;font-size:.78
       </div>
     </nav>
     <div class="main">
-      <div class="topbar"><div class="tbt" id="stbt">Tableau de bord</div><div class="sw"><span class="si">🔍</span><input class="srch" placeholder="Rechercher un cours…" oninput="ssrch(this.value)"></div></div>
+      <div class="topbar"><button class="mob-menu-btn" onclick="openSb('stu')">☰</button><div class="tbt" id="stbt">Tableau de bord</div><div class="sw"><span class="si">🔍</span><input class="srch" placeholder="Rechercher…" oninput="ssrch(this.value)"></div></div>
       <!-- HOME -->
       <div class="pg on" id="ps-home">
         <div class="wb"><div class="wbi"><div><div class="wbg">Bienvenue</div><div class="wbn" id="wbn">—</div><div class="wbm" id="wbm">—</div></div><div class="wbbd"><div class="wbbt" id="wbbt">MSPT</div></div></div></div>
@@ -428,6 +569,17 @@ code.mat{background:var(--cream);padding:3px 9px;border-radius:5px;font-size:.78
   </div>
 </div>
 
+  <!-- BOTTOM NAV MOBILE ÉTUDIANT -->
+  <nav class="mob-nav" id="mob-nav-stu">
+    <div class="mob-nav-items">
+      <div class="mob-nav-item-wrap"><button class="mob-nav-item on" id="mn-home" onclick="stuMobNav('ps-home','mn-home')"><span class="mni-ico">🏠</span><span class="mni-lbl">Accueil</span></button></div>
+      <div class="mob-nav-item-wrap"><button class="mob-nav-item" id="mn-cours" onclick="stuMobNav('ps-cours','mn-cours')"><span class="mni-ico">📚</span><span class="mni-lbl">Cours</span></button></div>
+      <div class="mob-nav-item-wrap"><button class="mob-nav-item" id="mn-ann" onclick="stuMobNav('ps-ann','mn-ann')"><span class="mni-ico">📣</span><span class="mni-lbl">Annonces</span><span class="mob-nav-badge" id="mn-ann-badge" style="display:none">0</span></button></div>
+      <div class="mob-nav-item-wrap"><button class="mob-nav-item" id="mn-profil" onclick="stuMobNav('ps-profil','mn-profil')"><span class="mni-ico">👤</span><span class="mni-lbl">Profil</span></button></div>
+    </div>
+  </nav>
+</div>
+
 <!-- ═══════════════ ADMIN ═══════════════ -->
 <div id="va" class="view">
   <div class="app">
@@ -453,7 +605,7 @@ code.mat{background:var(--cream);padding:3px 9px;border-radius:5px;font-size:.78
       </div>
     </nav>
     <div class="main">
-      <div class="topbar"><div class="tbt" id="atbt">Tableau de bord</div><div style="flex:1"></div><button class="tbgh" onclick="toast('🔄 Actualisé')">🔄</button><button class="tbbtn" onclick="anav(document.querySelector('[onclick*=pa-upload]'),\'pa-upload\')">+ Nouveau cours</button></div>
+      <div class="topbar"><button class="mob-menu-btn" onclick="openSb('adm')">☰</button><div class="tbt" id="atbt">Tableau de bord</div><div style="flex:1"></div><button class="tbgh" onclick="toast('🔄 Actualisé')">🔄</button><button class="tbbtn" onclick="anav(document.querySelector('[onclick*=pa-upload]'),\'pa-upload\')">+ Nouveau cours</button></div>
       <!-- ADM HOME -->
       <div class="pg on" id="pa-home">
         <div class="krow">
@@ -575,6 +727,18 @@ code.mat{background:var(--cream);padding:3px 9px;border-radius:5px;font-size:.78
       </div>
     </div>
   </div>
+</div>
+
+  <!-- BOTTOM NAV MOBILE ADMIN -->
+  <nav class="mob-nav" id="mob-nav-adm">
+    <div class="mob-nav-items">
+      <div class="mob-nav-item-wrap"><button class="mob-nav-item on" id="ma-home" onclick="admMobNav('pa-home','ma-home')"><span class="mni-ico">📊</span><span class="mni-lbl">Dashboard</span></button></div>
+      <div class="mob-nav-item-wrap"><button class="mob-nav-item" id="ma-cours" onclick="admMobNav('pa-cours','ma-cours')"><span class="mni-ico">📚</span><span class="mni-lbl">Cours</span></button></div>
+      <div class="mob-nav-item-wrap"><button class="mob-nav-item" id="ma-upload" onclick="admMobNav('pa-upload','ma-upload')"><span class="mni-ico">➕</span><span class="mni-lbl">Ajouter</span></button></div>
+      <div class="mob-nav-item-wrap"><button class="mob-nav-item" id="ma-mat" onclick="admMobNav('pa-mat','ma-mat')"><span class="mni-ico">🎓</span><span class="mni-lbl">Étudiants</span></button></div>
+      <div class="mob-nav-item-wrap"><button class="mob-nav-item" id="ma-ann" onclick="admMobNav('pa-ann','ma-ann')"><span class="mni-ico">📣</span><span class="mni-lbl">Annonces</span></button></div>
+    </div>
+  </nav>
 </div>
 
 <!-- MODAL SUPPRIMER -->
@@ -805,7 +969,7 @@ function anav(el,pid){
 // ════════════════════════════════
 // ÉTUDIANT
 // ════════════════════════════════
-function showStu(){
+function showStu(){showMobNav('stu');
   sw('vs');
   const u=CU;
   const ini=u.nom.split(' ').slice(0,2).map(n=>n[0]).join('');
@@ -820,6 +984,9 @@ function showStu(){
   const pub=DB.cours.filter(c=>c.stat==='publié');
   document.getElementById('scbdg').textContent=pub.length;
   document.getElementById('sanbdg').textContent=DB.ann.length;
+  // Badge bottom nav annonces
+  const mab = document.getElementById('mn-ann-badge');
+  if(mab){ if(DB.ann.length>0){mab.style.display='flex';mab.textContent=DB.ann.length;}else{mab.style.display='none';} }
   if(DB.ann.length>0){
     document.getElementById('annbtxt').innerHTML='<strong>'+DB.ann[0].tit+'</strong>';
     document.getElementById('annbd').textContent=DB.ann[0].date;
@@ -939,7 +1106,7 @@ function renderStuAnn(){
 // ════════════════════════════════
 // ADMIN
 // ════════════════════════════════
-function showAdm(){
+function showAdm(){showMobNav('adm');
   sw('va');
   renderKpi();renderACours();renderAAnn();renderAMat();renderModStat();renderActLog();
   document.getElementById('acbdg').textContent=DB.cours.filter(c=>c.stat==='publié').length;
@@ -1111,6 +1278,59 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 document.querySelectorAll('.mov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on');}));
 let TT;
 function toast(m){clearTimeout(TT);const e=document.getElementById('toast');e.textContent=m;e.classList.add('on');TT=setTimeout(()=>e.classList.remove('on'),3200);}
+
+// ═══════════════════════════════════
+// FONCTIONS MOBILE
+// ═══════════════════════════════════
+function openSb(who) {
+  document.getElementById('sb-overlay').classList.add('on');
+  // Ouvrir la sidebar de la vue courante
+  const sbs = document.querySelectorAll('.sb');
+  sbs.forEach(sb => {
+    const parent = sb.closest('#vs, #va');
+    if ((who === 'stu' && parent && parent.id === 'vs') ||
+        (who === 'adm' && parent && parent.id === 'va')) {
+      sb.classList.add('open');
+    }
+  });
+}
+function closeSb() {
+  document.getElementById('sb-overlay').classList.remove('on');
+  document.querySelectorAll('.sb').forEach(sb => sb.classList.remove('open'));
+}
+
+// Navigation bottom bar étudiant
+function stuMobNav(pgId, btnId) {
+  snav(null, pgId, true);
+  // sync sidebar
+  const map = {'ps-home':'[onclick*=ps-home]','ps-cours':'[onclick*=ps-cours]','ps-ann':'[onclick*=ps-ann]','ps-profil':'[onclick*=ps-profil]'};
+  if (map[pgId]) { const el = document.querySelector('#vs ' + map[pgId]); if(el) { document.querySelectorAll('#vs .ni').forEach(i=>i.classList.remove('on')); el.classList.add('on'); } }
+  // active bottom nav btn
+  document.querySelectorAll('#mob-nav-stu .mob-nav-item').forEach(b => b.classList.remove('on'));
+  const btn = document.getElementById(btnId);
+  if (btn) btn.classList.add('on');
+  closeSb();
+}
+
+// Navigation bottom bar admin
+function admMobNav(pgId, btnId) {
+  anav(null, pgId);
+  document.querySelectorAll('#mob-nav-adm .mob-nav-item').forEach(b => b.classList.remove('on'));
+  const btn = document.getElementById(btnId);
+  if (btn) btn.classList.add('on');
+  closeSb();
+}
+
+// Fermer sidebar quand on clique sur un item (mobile)
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.ni') && window.innerWidth <= 768) { closeSb(); }
+});
+
+// Afficher/cacher bottom navs selon la vue
+function showMobNav(which) {
+  document.getElementById('mob-nav-stu').style.display = which === 'stu' ? 'block' : 'none';
+  document.getElementById('mob-nav-adm').style.display = which === 'adm' ? 'block' : 'none';
+}
 
 // ── INITIALISATION ──
 // 1. Imposer le mot de passe correct (effacer seulement le mot de passe, pas tout)
